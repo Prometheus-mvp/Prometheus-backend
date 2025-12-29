@@ -1,4 +1,5 @@
 """Structured JSON logging configuration."""
+
 import json
 import logging
 import sys
@@ -52,4 +53,3 @@ def setup_logging(log_level: str = "INFO") -> None:
     logging.getLogger("uvicorn").setLevel(logging.WARNING)
     logging.getLogger("sqlalchemy.engine").setLevel(logging.WARNING)
     logging.getLogger("httpx").setLevel(logging.WARNING)
-

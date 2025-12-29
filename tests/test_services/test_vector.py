@@ -40,4 +40,3 @@ async def test_store_embedding_statement(monkeypatch, dummy_session):
         content_hash="hash",
         metadata={},
     )
-

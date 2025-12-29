@@ -1,4 +1,5 @@
 """Calendar Pydantic schemas."""
+
 from datetime import datetime
 from typing import List, Optional
 from uuid import UUID
@@ -8,6 +9,7 @@ from pydantic import BaseModel
 
 class CalendarEventBase(BaseModel):
     """Base calendar event schema."""
+
     title: str
     description: Optional[str] = None
     start_at: datetime
@@ -17,11 +19,13 @@ class CalendarEventBase(BaseModel):
 
 class CalendarEventCreate(CalendarEventBase):
     """Calendar event creation schema."""
+
     pass
 
 
 class CalendarEventUpdate(BaseModel):
     """Calendar event update schema."""
+
     title: Optional[str] = None
     description: Optional[str] = None
     start_at: Optional[datetime] = None
@@ -31,6 +35,7 @@ class CalendarEventUpdate(BaseModel):
 
 class CalendarEventResponse(CalendarEventBase):
     """Calendar event response schema."""
+
     id: UUID
     user_id: UUID
     created_at: datetime
@@ -42,6 +47,6 @@ class CalendarEventResponse(CalendarEventBase):
 
 class CalendarEventListResponse(BaseModel):
     """Calendar event list response schema."""
+
     events: List[CalendarEventResponse]
     total: int
-

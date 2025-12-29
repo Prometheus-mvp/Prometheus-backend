@@ -1,4 +1,5 @@
 """Embedding generation job."""
+
 import logging
 from typing import List
 
@@ -35,4 +36,3 @@ async def embed_objects(
 
 
 __all__ = ["embed_objects"]
-

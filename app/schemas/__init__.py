@@ -1,4 +1,5 @@
 """Pydantic schemas."""
+
 from app.schemas.calendar import (
     CalendarEventBase,
     CalendarEventCreate,
@@ -61,4 +62,3 @@ __all__ = [
     "SummaryCreate",
     "SummaryResponse",
 ]
-

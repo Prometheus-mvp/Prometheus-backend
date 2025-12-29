@@ -1,4 +1,5 @@
 """Base connector interface and common utilities."""
+
 import secrets
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta, timezone
@@ -163,4 +164,3 @@ class BaseConnector(ABC):
 
 
 __all__ = ["BaseConnector", "TokenData"]
-

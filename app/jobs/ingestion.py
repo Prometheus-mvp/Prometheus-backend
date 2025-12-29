@@ -1,4 +1,5 @@
 """Event ingestion job (poll connectors every 5 minutes)."""
+
 import logging
 from datetime import datetime, timedelta, timezone
 
@@ -61,9 +62,7 @@ async def ingest_events_for_user(session: AsyncSession, user_id: str) -> int:
                     content_hash=evt.get("content_hash", ""),
                     importance_score=evt.get("importance_score", 0),
                     occurred_at=evt.get("occurred_at", now),
-                    expires_at=evt.get(
-                        "expires_at", now + timedelta(days=30)
-                    ),
+                    expires_at=evt.get("expires_at", now + timedelta(days=30)),
                     deleted_at=None,
                     raw=evt.get("raw", {}),
                 )
@@ -77,4 +76,3 @@ async def ingest_events_for_user(session: AsyncSession, user_id: str) -> int:
 
     logger.info("Ingestion completed", extra={"user_id": user_id, "count": total})
     return total
-

@@ -1,4 +1,5 @@
 """FastAPI application entry point."""
+
 import logging
 from contextlib import asynccontextmanager
 
@@ -83,10 +84,10 @@ app.include_router(api_router, prefix="/api/v1")
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(
         "app.main:app",
         host=settings.api_host,
         port=settings.api_port,
         reload=settings.is_development,
     )
-

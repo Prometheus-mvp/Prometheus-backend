@@ -1,4 +1,5 @@
 """Outlook connector implementation (Microsoft Graph)."""
+
 import logging
 import secrets
 from datetime import datetime, timedelta, timezone
@@ -21,7 +22,9 @@ class OutlookConnector(BaseConnector):
 
     def __init__(self) -> None:
         super().__init__()
-        self.base_auth_url = "https://login.microsoftonline.com/{tenant}/oauth2/v2.0/authorize"
+        self.base_auth_url = (
+            "https://login.microsoftonline.com/{tenant}/oauth2/v2.0/authorize"
+        )
         self.token_url = "https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token"
 
     async def build_auth_url(self, user_id: str) -> Tuple[str, str]:
@@ -180,7 +183,9 @@ class OutlookConnector(BaseConnector):
         try:
             access_token = await self._ensure_access_token(session, account)
         except Exception as exc:
-            logger.warning("Outlook access token unavailable", extra={"error": str(exc)})
+            logger.warning(
+                "Outlook access token unavailable", extra={"error": str(exc)}
+            )
             return events
         headers = {"Authorization": f"Bearer {access_token}"}
 
@@ -227,4 +232,3 @@ class OutlookConnector(BaseConnector):
 outlook_connector = OutlookConnector()
 
 __all__ = ["OutlookConnector", "outlook_connector"]
-

@@ -1,5 +1,5 @@
 """Tests for Event model."""
-import pytest
+
 from datetime import datetime, timezone, timedelta
 from uuid import uuid4
 from app.models.event import Event
@@ -10,7 +10,7 @@ def test_event_creation():
     user_id = uuid4()
     now = datetime.now(timezone.utc)
     expires = now + timedelta(days=30)
-    
+
     event = Event(
         user_id=user_id,
         source="slack",
@@ -19,9 +19,9 @@ def test_event_creation():
         title="Test Message",
         body="Hello world",
         occurred_at=now,
-        expires_at=expires
+        expires_at=expires,
     )
-    
+
     assert event.user_id == user_id
     assert event.source == "slack"
     assert event.external_id == "msg_123"
@@ -35,7 +35,7 @@ def test_event_with_thread():
     user_id = uuid4()
     thread_id = uuid4()
     now = datetime.now(timezone.utc)
-    
+
     event = Event(
         user_id=user_id,
         source="telegram",
@@ -43,8 +43,7 @@ def test_event_with_thread():
         thread_id=thread_id,
         event_type="message",
         occurred_at=now,
-        expires_at=now + timedelta(days=30)
+        expires_at=now + timedelta(days=30),
     )
-    
-    assert event.thread_id == thread_id
 
+    assert event.thread_id == thread_id

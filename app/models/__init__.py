@@ -1,4 +1,5 @@
 """Database models."""
+
 from app.models.calendar_event import CalendarEvent
 from app.models.draft import Draft
 from app.models.embedding import Embedding
@@ -28,4 +29,3 @@ __all__ = [
     "Draft",
     "Embedding",
 ]
-

@@ -1,4 +1,5 @@
 """RQ worker bootstrap and runner."""
+
 import logging
 
 from redis import from_url
@@ -26,4 +27,3 @@ def run_worker(queues: list[str] | None = None) -> None:
 
 if __name__ == "__main__":
     run_worker()
-

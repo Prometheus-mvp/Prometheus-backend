@@ -1,4 +1,5 @@
 """Summarize agent workflow."""
+
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
@@ -90,4 +91,3 @@ class SummarizeAgent(AgentBase):
 summarize_agent = SummarizeAgent()
 
 __all__ = ["SummarizeAgent", "summarize_agent"]
-

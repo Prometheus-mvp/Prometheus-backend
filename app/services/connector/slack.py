@@ -1,4 +1,5 @@
 """Slack connector implementation."""
+
 import logging
 import secrets
 from datetime import datetime, timedelta, timezone
@@ -26,9 +27,7 @@ class SlackConnector(BaseConnector):
     async def build_auth_url(self, user_id: str) -> Tuple[str, str]:
         """Return Slack OAuth authorization URL and state."""
         state = secrets.token_urlsafe(16)
-        scopes = (
-            "channels:history,channels:read,chat:write,users:read,users:read.email"
-        )
+        scopes = "channels:history,channels:read,chat:write,users:read,users:read.email"
         auth_url = (
             f"{self.base_auth_url}"
             f"?client_id={settings.slack_client_id}"
@@ -232,4 +231,3 @@ class SlackConnector(BaseConnector):
 slack_connector = SlackConnector()
 
 __all__ = ["SlackConnector", "slack_connector"]
-

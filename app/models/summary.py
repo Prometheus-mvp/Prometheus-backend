@@ -1,4 +1,5 @@
 """Summary model."""
+
 import uuid
 
 from sqlalchemy import Column, DateTime, ForeignKey, Index
@@ -15,13 +16,25 @@ class Summary(Base):
     __tablename__ = "summaries"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    user_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
     window_start = Column(DateTime(timezone=True), nullable=False)
     window_end = Column(DateTime(timezone=True), nullable=False)
     content_json = Column(JSONB, nullable=False)
     source_refs = Column(JSONB, nullable=False, server_default="[]")
-    created_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now())
+    created_at = Column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )
+    updated_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+        onupdate=func.now(),
+    )
 
     # Indexes
     __table_args__ = (
@@ -30,4 +43,3 @@ class Summary(Base):
 
     # Relationships
     user = relationship("User", back_populates="summaries")
-

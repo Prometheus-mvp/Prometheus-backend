@@ -13,7 +13,12 @@ def dummy_session():
 
         async def execute(self, *args, **kwargs):
             calls.append(("execute", args, kwargs))
-            return SimpleNamespace(all=lambda: [], scalars=lambda: [], fetchall=lambda: [], first=lambda: None)
+            return SimpleNamespace(
+                all=lambda: [],
+                scalars=lambda: [],
+                fetchall=lambda: [],
+                first=lambda: None,
+            )
 
         async def flush(self):
             calls.append(("flush",))
@@ -28,7 +33,14 @@ def dummy_session():
 @pytest.fixture
 def dummy_vector_results():
     class V:
-        def __init__(self, object_type="event", object_id="obj", chunk_index=0, score=0.1, metadata=None):
+        def __init__(
+            self,
+            object_type="event",
+            object_id="obj",
+            chunk_index=0,
+            score=0.1,
+            metadata=None,
+        ):
             self.object_type = object_type
             self.object_id = object_id
             self.chunk_index = chunk_index
@@ -37,4 +49,3 @@ def dummy_vector_results():
             self.id = "emb"
 
     return [V()]
-

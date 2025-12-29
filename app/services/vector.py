@@ -1,4 +1,5 @@
 """VectorStore abstraction (pgvector implementation)."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -121,8 +122,8 @@ class VectorStore:
                 conditions.append(evt.occurred_at <= time_end)
             if sources:
                 conditions.append(evt.source.in_(sources))
-            query = (
-                query.select_from(emb.__table__.join(evt.__table__, and_(*conditions)))
+            query = query.select_from(
+                emb.__table__.join(evt.__table__, and_(*conditions))
             )
 
         rows = (await session.execute(query)).all()
@@ -184,4 +185,3 @@ class VectorStore:
 
 
 __all__ = ["VectorStore", "VectorRecord"]
-

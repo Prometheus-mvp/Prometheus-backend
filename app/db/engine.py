@@ -1,4 +1,5 @@
 """SQLAlchemy async engine creation with connection pooling."""
+
 import logging
 
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
@@ -39,4 +40,3 @@ def create_engine() -> AsyncEngine:
 
 # Global engine instance
 engine = create_engine()
-

@@ -1,4 +1,5 @@
 """Summarization job to generate summaries and proposals."""
+
 import logging
 from typing import List, Optional
 
@@ -25,4 +26,3 @@ async def run_summarization(
 
 
 __all__ = ["run_summarization"]
-

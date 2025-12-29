@@ -1,4 +1,5 @@
 """Task detection agent workflow."""
+
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
@@ -92,4 +93,3 @@ class TaskAgent(AgentBase):
 task_agent = TaskAgent()
 
 __all__ = ["TaskAgent", "task_agent"]
-

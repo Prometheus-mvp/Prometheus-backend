@@ -1,4 +1,5 @@
 """Calendar CRUD endpoints."""
+
 from uuid import UUID
 
 from fastapi import APIRouter, HTTPException
@@ -73,4 +74,3 @@ async def delete_calendar_event(
     if result.rowcount == 0:
         raise HTTPException(status_code=404, detail="Calendar event not found")
     return None
-

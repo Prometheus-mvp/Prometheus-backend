@@ -26,4 +26,3 @@ def test_prompts_missing_intent(client, monkeypatch):
     monkeypatch.setattr(prompt_router, "classify_intent", fake_classify)
     resp = client.post("/api/v1/prompts", json={"prompt": "hi"})
     assert resp.status_code == 400
-

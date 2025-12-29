@@ -1,4 +1,5 @@
 """FastAPI dependencies for authentication and database session."""
+
 from typing import Annotated
 
 from fastapi import Depends
@@ -31,4 +32,3 @@ def get_user_id(user_data: dict = Depends(get_current_user_dep)) -> str:
 DatabaseSession = Annotated[AsyncSession, Depends(get_db_session)]
 CurrentUser = Annotated[dict, Depends(get_current_user_dep)]
 UserID = Annotated[str, Depends(get_user_id)]
-

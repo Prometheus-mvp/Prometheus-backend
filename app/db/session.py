@@ -1,4 +1,5 @@
 """Async session management and dependency injection."""
+
 import logging
 from typing import AsyncGenerator
 
@@ -49,4 +50,3 @@ async def get_db_session() -> AsyncSession:
         AsyncSession instance (must be closed manually)
     """
     return AsyncSessionLocal()
-

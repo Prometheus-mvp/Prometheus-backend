@@ -1,5 +1,3 @@
-import pytest
-
 from app.services.embedding import chunk_text, compute_content_hash
 
 
@@ -12,4 +10,3 @@ def test_chunk_text_splits():
 def test_compute_content_hash_deterministic():
     assert compute_content_hash("hello") == compute_content_hash("hello")
     assert compute_content_hash("hello") != compute_content_hash("world")
-

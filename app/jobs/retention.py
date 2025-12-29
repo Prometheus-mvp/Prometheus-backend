@@ -1,4 +1,5 @@
 """Retention cleanup job."""
+
 import logging
 from datetime import datetime, timezone
 
@@ -63,4 +64,3 @@ async def run_retention(
 
 
 __all__ = ["run_retention"]
-

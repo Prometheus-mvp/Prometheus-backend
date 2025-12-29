@@ -1,4 +1,5 @@
 """AES-256-GCM encryption/decryption for OAuth tokens."""
+
 import hashlib
 import logging
 import os
@@ -100,4 +101,3 @@ class EncryptionService:
 
 # Global encryption service instance
 encryption_service = EncryptionService()
-

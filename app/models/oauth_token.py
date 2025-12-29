@@ -1,4 +1,5 @@
 """OAuthToken model."""
+
 import uuid
 
 from sqlalchemy import Column, DateTime, ForeignKey, Index, Text
@@ -15,8 +16,18 @@ class OAuthToken(Base):
     __tablename__ = "oauth_tokens"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
-    linked_account_id = Column(UUID(as_uuid=True), ForeignKey("linked_accounts.id", ondelete="CASCADE"), nullable=False, index=True)
+    user_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    linked_account_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("linked_accounts.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
     token_type = Column(Text, nullable=False)  # bearer | bot
     scopes = Column(Text, nullable=True)
     access_token_enc = Column(Text, nullable=False)  # AES-256-GCM encrypted
@@ -25,8 +36,15 @@ class OAuthToken(Base):
     last_refreshed_at = Column(DateTime(timezone=True), nullable=True)
     revoked_at = Column(DateTime(timezone=True), nullable=True)
     token_fingerprint = Column(Text, nullable=True)
-    created_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now())
+    created_at = Column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )
+    updated_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+        onupdate=func.now(),
+    )
 
     # Indexes
     __table_args__ = (
@@ -36,4 +54,3 @@ class OAuthToken(Base):
     # Relationships
     user = relationship("User", back_populates="oauth_tokens")
     linked_account = relationship("LinkedAccount", back_populates="oauth_tokens")
-

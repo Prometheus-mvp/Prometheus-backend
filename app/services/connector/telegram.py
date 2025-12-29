@@ -1,4 +1,5 @@
 """Telegram connector implementation (MTProto via Telethon)."""
+
 import secrets
 from typing import Any, Dict, List, Optional, Tuple
 import logging
@@ -86,7 +87,9 @@ class TelegramConnector(BaseConnector):
             raise ValueError("Invalid Telegram code") from exc
         except SessionPasswordNeededError as exc:
             await client.disconnect()
-            raise ValueError("Two-factor password required for Telegram account") from exc
+            raise ValueError(
+                "Two-factor password required for Telegram account"
+            ) from exc
         except Exception as exc:
             await client.disconnect()
             logger.error("Telegram sign_in failed", extra={"error": str(exc)})
@@ -118,9 +121,7 @@ class TelegramConnector(BaseConnector):
         )
         return account
 
-    async def handle_callback(
-        self, session: AsyncSession, user_id: str, **kwargs: Any
-    ):
+    async def handle_callback(self, session: AsyncSession, user_id: str, **kwargs: Any):
         """Telegram does not use traditional OAuth callbacks; no-op."""
         return None
 
@@ -177,9 +178,7 @@ class TelegramConnector(BaseConnector):
                         "occurred_at": message.date,
                         "expires_at": datetime.now(timezone.utc) + timedelta(days=30),
                         "raw": (
-                            message.to_dict()
-                            if hasattr(message, "to_dict")
-                            else {}
+                            message.to_dict() if hasattr(message, "to_dict") else {}
                         ),
                     }
                 )
@@ -191,4 +190,3 @@ class TelegramConnector(BaseConnector):
 telegram_connector = TelegramConnector()
 
 __all__ = ["TelegramConnector", "telegram_connector"]
-

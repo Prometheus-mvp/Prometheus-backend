@@ -1,4 +1,5 @@
 """Prompt router agent using LangChain-style prompt classification."""
+
 from __future__ import annotations
 
 from typing import Literal
@@ -16,8 +17,8 @@ class PromptRouterAgent(AgentBase):
             "Classify the user request as one of: summarize, task. "
             "Return a JSON object with key intent. "
             "Examples:\n"
-            "- \"summarize last 2 hours\" => summarize\n"
-            "- \"what needs action\" => task\n"
+            '- "summarize last 2 hours" => summarize\n'
+            '- "what needs action" => task\n'
             "- Otherwise => unknown\n"
             f'Prompt: "{prompt}"'
         )
@@ -33,4 +34,3 @@ class PromptRouterAgent(AgentBase):
 prompt_router = PromptRouterAgent()
 
 __all__ = ["PromptRouterAgent", "prompt_router"]
-

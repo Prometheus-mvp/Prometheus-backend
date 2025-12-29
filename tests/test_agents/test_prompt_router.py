@@ -13,4 +13,3 @@ async def test_prompt_router_classify(monkeypatch):
     monkeypatch.setattr(agent, "complete_json", fake_complete)
     intent = await agent.classify_intent("summarize last 2 hours")
     assert intent == "summarize"
-

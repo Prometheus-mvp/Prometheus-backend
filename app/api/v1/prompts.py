@@ -1,4 +1,5 @@
 """Prompt endpoint routing to agents."""
+
 import logging
 
 from fastapi import APIRouter, HTTPException
@@ -48,4 +49,3 @@ async def handle_prompt(
             raise HTTPException(status_code=500, detail="Task detection failed")
 
     raise HTTPException(status_code=400, detail="Unable to classify prompt intent")
-

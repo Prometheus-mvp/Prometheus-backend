@@ -1,4 +1,5 @@
 """Helper functions for RLS policy enforcement and user context."""
+
 import logging
 from typing import Optional
 
@@ -44,11 +45,13 @@ async def verify_rls_enabled(session: AsyncSession, table_name: str) -> bool:
     Returns:
         True if RLS is enabled, False otherwise
     """
-    query = text("""
+    query = text(
+        """
         SELECT tablename, rowsecurity
         FROM pg_tables
         WHERE schemaname = 'public' AND tablename = :table_name
-    """)
+    """
+    )
     result = await session.execute(query, {"table_name": table_name})
     row = result.fetchone()
 
@@ -71,4 +74,3 @@ async def get_user_id_from_context(session: AsyncSession) -> Optional[str]:
     # In practice, Supabase handles this automatically via RLS
     # This is a placeholder for service role operations
     return None
-

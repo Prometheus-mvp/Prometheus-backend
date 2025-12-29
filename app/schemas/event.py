@@ -1,4 +1,5 @@
 """Event Pydantic schemas."""
+
 from datetime import datetime
 from typing import Any, Dict, Optional
 from uuid import UUID
@@ -8,6 +9,7 @@ from pydantic import BaseModel
 
 class EventBase(BaseModel):
     """Base event schema."""
+
     source: str
     external_id: str
     event_type: str
@@ -19,6 +21,7 @@ class EventBase(BaseModel):
 
 class EventCreate(EventBase):
     """Event creation schema."""
+
     source_account_id: Optional[UUID] = None
     thread_id: Optional[UUID] = None
     text_for_embedding: Optional[str] = None
@@ -29,6 +32,7 @@ class EventCreate(EventBase):
 
 class EventResponse(EventBase):
     """Event response schema."""
+
     id: UUID
     user_id: UUID
     source_account_id: Optional[UUID] = None
@@ -44,4 +48,3 @@ class EventResponse(EventBase):
 
     class Config:
         from_attributes = True
-

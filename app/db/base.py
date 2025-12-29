@@ -1,4 +1,5 @@
 """DeclarativeBase for SQLAlchemy models."""
+
 import uuid
 from datetime import datetime
 
@@ -20,4 +21,3 @@ def generate_uuid() -> str:
 def utcnow() -> datetime:
     """Get current UTC datetime."""
     return datetime.utcnow()
-

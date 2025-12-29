@@ -1,4 +1,5 @@
 """Base agent utilities and LLM client setup."""
+
 from __future__ import annotations
 
 import logging
@@ -40,6 +41,7 @@ class AgentBase:
             if not content:
                 return {}
             import json
+
             return json.loads(content)
         except OpenAIError as exc:
             self.logger.error("LLM call failed", extra={"error": str(exc)})
@@ -50,4 +52,3 @@ class AgentBase:
 
 
 __all__ = ["AgentBase"]
-

@@ -1,4 +1,5 @@
 """Security utilities for JWT validation and user authentication."""
+
 import logging
 
 from fastapi import Depends, HTTPException, status
@@ -87,4 +88,3 @@ def extract_user_id(token_data: dict) -> str:
         User ID (UUID string)
     """
     return token_data["user_id"]
-

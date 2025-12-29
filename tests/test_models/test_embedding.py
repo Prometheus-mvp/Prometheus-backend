@@ -1,5 +1,5 @@
 """Tests for Embedding model."""
-import pytest
+
 from uuid import uuid4
 from app.models.embedding import Embedding
 
@@ -9,7 +9,7 @@ def test_embedding_creation():
     user_id = uuid4()
     object_id = uuid4()
     fake_vector = [0.1] * 1536
-    
+
     embedding = Embedding(
         user_id=user_id,
         object_type="event",
@@ -18,9 +18,9 @@ def test_embedding_creation():
         embedding_model="text-embedding-ada-002",
         embedding_dim=1536,
         embedding=fake_vector,
-        content_hash="abc123"
+        content_hash="abc123",
     )
-    
+
     assert embedding.user_id == user_id
     assert embedding.object_type == "event"
     assert embedding.object_id == object_id
@@ -35,7 +35,7 @@ def test_embedding_multi_chunk():
     user_id = uuid4()
     object_id = uuid4()
     fake_vector = [0.2] * 1536
-    
+
     embedding = Embedding(
         user_id=user_id,
         object_type="note",
@@ -44,8 +44,7 @@ def test_embedding_multi_chunk():
         embedding_model="text-embedding-ada-002",
         embedding_dim=1536,
         embedding=fake_vector,
-        content_hash="def456"
+        content_hash="def456",
     )
-    
-    assert embedding.chunk_index == 2
 
+    assert embedding.chunk_index == 2

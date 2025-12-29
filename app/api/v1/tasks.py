@@ -1,4 +1,5 @@
 """Tasks API endpoints."""
+
 from typing import Optional
 
 from fastapi import APIRouter, Query
@@ -33,4 +34,3 @@ async def list_tasks(
         if t.priority in by_priority:
             by_priority[t.priority] += 1
     return TaskListResponse(tasks=tasks, total=len(tasks), by_priority=by_priority)
-

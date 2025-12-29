@@ -1,4 +1,5 @@
 """Connector API endpoints."""
+
 from fastapi import APIRouter, HTTPException, status
 from sqlalchemy import delete, select
 
@@ -142,12 +143,10 @@ async def delete_linked_account(
     user_id: UserID,
 ) -> None:
     """Delete a linked account for the current user."""
-    stmt = (
-        delete(LinkedAccount)
-        .where(LinkedAccount.id == linked_account_id, LinkedAccount.user_id == user_id)
+    stmt = delete(LinkedAccount).where(
+        LinkedAccount.id == linked_account_id, LinkedAccount.user_id == user_id
     )
     result = await db.execute(stmt)
     if result.rowcount == 0:
         raise HTTPException(status_code=404, detail="Linked account not found")
     return None
-

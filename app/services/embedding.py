@@ -1,4 +1,5 @@
 """Embedding service using OpenAI and VectorStore."""
+
 from __future__ import annotations
 
 import hashlib
@@ -56,13 +57,17 @@ class EmbeddingService:
     async def embed_text(self, texts: Sequence[str]) -> List[List[float]]:
         """Call OpenAI embeddings API."""
         try:
-            resp = await self.client.embeddings.create(model=self.model, input=list(texts))
+            resp = await self.client.embeddings.create(
+                model=self.model, input=list(texts)
+            )
             return [item.embedding for item in resp.data]
         except OpenAIError as exc:
             self.logger.error("Embedding request failed", extra={"error": str(exc)})
             raise RuntimeError("Embedding request failed") from exc
         except Exception as exc:
-            self.logger.error("Embedding response parsing failed", extra={"error": str(exc)})
+            self.logger.error(
+                "Embedding response parsing failed", extra={"error": str(exc)}
+            )
             raise RuntimeError("Embedding response invalid") from exc
 
     async def embed_and_store(
@@ -100,4 +105,3 @@ class EmbeddingService:
 
 
 __all__ = ["EmbeddingService", "EmbeddingObject", "compute_content_hash", "chunk_text"]
-

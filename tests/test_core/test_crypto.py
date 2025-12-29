@@ -7,4 +7,3 @@ def test_encrypt_decrypt_roundtrip():
     assert enc != plaintext
     dec = encryption_service.decrypt(enc)
     assert dec == plaintext
-

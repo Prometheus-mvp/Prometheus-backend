@@ -1,4 +1,5 @@
 """API v1 router."""
+
 from fastapi import APIRouter
 
 from app.api.v1 import calendar, connectors, prompts, tasks
@@ -15,4 +16,3 @@ api_router.include_router(tasks.router, prefix="")
 api_router.include_router(calendar.router, prefix="")
 
 __all__ = ["api_router"]
-

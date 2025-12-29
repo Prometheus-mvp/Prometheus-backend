@@ -1,4 +1,5 @@
 """Timezone utilities."""
+
 from datetime import datetime, timezone
 from typing import Optional
 
@@ -54,4 +55,3 @@ def from_utc(dt: datetime, tz: str) -> datetime:
 
     tz_obj = pytz.timezone(tz)
     return dt.astimezone(tz_obj)
-
