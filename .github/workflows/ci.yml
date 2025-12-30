@@ -77,10 +77,10 @@ jobs:
       SLACK_CLIENT_ID: ${{secrets.SLACK_CLIENT_ID}}
       SLACK_CLIENT_SECRET: ${{secrets.SLACK_CLIENT_SECRET}}
       SLACK_REDIRECT_URI: http://localhost:8000/api/v1/connectors/slack/oauth/callback
-      TELEGRAM_API_ID: test-telegram-api-id
-      TELEGRAM_API_HASH: test-telegram-api-hash
-      OUTLOOK_CLIENT_ID: test-outlook-client-id
-      OUTLOOK_CLIENT_SECRET: test-outlook-client-secret
+      TELEGRAM_API_ID: ${{secrets.TELEGRAM_API_ID}}
+      TELEGRAM_API_HASH: ${{secrets.TELEGRAM_API_HASH}}
+      OUTLOOK_CLIENT_ID: ${{secrets.OUTLOOK_CLIENT_ID}}
+      OUTLOOK_CLIENT_SECRET: ${{secrets.OUTLOOK_CLIENT_SECRET}}
       OUTLOOK_REDIRECT_URI: http://localhost:8000/api/v1/connectors/outlook/oauth/callback
       OUTLOOK_TENANT_ID: common
       ENVIRONMENT: test
