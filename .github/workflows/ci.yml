@@ -74,8 +74,8 @@ jobs:
       SUPABASE_SERVICE_ROLE_KEY: ${{secrets.SUPABASE_SERVICE_ROLE_KEY}}
       OPENAI_API_KEY: ${{secrets.OPENAI_API_KEY}}
       ENCRYPTION_KEY: ${{secrets.ENCRYPTION_KEY}}
-      SLACK_CLIENT_ID: test-slack-client-id
-      SLACK_CLIENT_SECRET: test-slack-client-secret
+      SLACK_CLIENT_ID: ${{secrets.SLACK_CLIENT_ID}}
+      SLACK_CLIENT_SECRET: ${{secrets.SLACK_CLIENT_SECRET}}
       SLACK_REDIRECT_URI: http://localhost:8000/api/v1/connectors/slack/oauth/callback
       TELEGRAM_API_ID: test-telegram-api-id
       TELEGRAM_API_HASH: test-telegram-api-hash
