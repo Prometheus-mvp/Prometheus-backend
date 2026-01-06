@@ -9,7 +9,6 @@ from app.schemas.calendar import (
 )
 from app.schemas.connector import (
     LinkedAccountBase,
-    LinkedAccountCreate,
     LinkedAccountResponse,
     OAuthCallbackRequest,
     OAuthCallbackResponse,
@@ -29,6 +28,17 @@ from app.schemas.task import (
     TaskUpdate,
 )
 from app.schemas.user import UserBase, UserCreate, UserResponse, UserUpdate
+from app.schemas.note import NoteBase, NoteCreate, NoteResponse, NoteUpdate
+from app.schemas.thread import ThreadBase, ThreadCreate, ThreadResponse, ThreadUpdate
+from app.schemas.entity import EntityBase, EntityCreate, EntityResponse, EntityUpdate
+from app.schemas.draft import DraftBase, DraftCreate, DraftResponse, DraftUpdate
+from app.schemas.proposal import (
+    ProposalBase,
+    ProposalCreate,
+    ProposalResponse,
+    ProposalUpdate,
+)
+from app.schemas.prompt import PromptRequest, PromptResponse
 
 __all__ = [
     "UserBase",
@@ -36,10 +46,8 @@ __all__ = [
     "UserUpdate",
     "UserResponse",
     "LinkedAccountBase",
-    "LinkedAccountCreate",
     "LinkedAccountResponse",
     "OAuthInitiateResponse",
-    "OAuthCallbackRequest",
     "OAuthCallbackResponse",
     "TelegramAuthInitiateRequest",
     "TelegramAuthInitiateResponse",
@@ -61,4 +69,26 @@ __all__ = [
     "SummaryBase",
     "SummaryCreate",
     "SummaryResponse",
+    "NoteBase",
+    "NoteCreate",
+    "NoteUpdate",
+    "NoteResponse",
+    "ThreadBase",
+    "ThreadCreate",
+    "ThreadUpdate",
+    "ThreadResponse",
+    "EntityBase",
+    "EntityCreate",
+    "EntityUpdate",
+    "EntityResponse",
+    "DraftBase",
+    "DraftCreate",
+    "DraftUpdate",
+    "DraftResponse",
+    "ProposalBase",
+    "ProposalCreate",
+    "ProposalUpdate",
+    "ProposalResponse",
+    "PromptRequest",
+    "PromptResponse",
 ]
