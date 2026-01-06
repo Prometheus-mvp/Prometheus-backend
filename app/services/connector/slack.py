@@ -168,12 +168,12 @@ class SlackConnector(BaseConnector):
 
         # Fetch linked account and token
         result = await session.execute(
-            LinkedAccount.__table__.select().where(
+            select(LinkedAccount).where(
                 LinkedAccount.user_id == user_id,
                 LinkedAccount.provider == self.provider,
             )
         )
-        account = result.fetchone()
+        account = result.scalars().first()
         if not account:
             return events
 

@@ -89,7 +89,7 @@ class BaseConnector(ABC):
             # Update scopes/status if changed
             account.scopes = scopes
             account.status = status
-            account.metadata = metadata
+            account.meta = metadata
             await session.flush()
             return account
 
@@ -99,7 +99,7 @@ class BaseConnector(ABC):
             provider_account_id=provider_account_id,
             scopes=scopes,
             status=status,
-            metadata=metadata,
+            meta=metadata,
         )
         session.add(account)
         await session.flush()
