@@ -2,7 +2,7 @@
 
 import uuid
 
-from sqlalchemy import Column, DateTime, ForeignKey, Index
+from sqlalchemy import CheckConstraint, Column, DateTime, ForeignKey, Index
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -36,9 +36,13 @@ class Summary(Base):
         onupdate=func.now(),
     )
 
-    # Indexes
+    # Constraints and Indexes
     __table_args__ = (
         Index("idx_summaries_user_window", "user_id", "window_start", "window_end"),
+        CheckConstraint(
+            "window_end > window_start",
+            name="ck_summaries_valid_window",
+        ),
     )
 
     # Relationships

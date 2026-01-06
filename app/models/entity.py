@@ -2,7 +2,7 @@
 
 import uuid
 
-from sqlalchemy import Column, DateTime, ForeignKey, Index, Text
+from sqlalchemy import CheckConstraint, Column, DateTime, ForeignKey, Index, Text
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -25,7 +25,7 @@ class Entity(Base):
     kind = Column(Text, nullable=False)  # person | org | project | topic
     name = Column(Text, nullable=False)
     aliases = Column(JSONB, nullable=False, server_default="[]")
-    metadata = Column(JSONB, nullable=False, server_default="{}")
+    meta = Column("metadata", JSONB, nullable=False, server_default="{}")
     created_at = Column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
@@ -36,8 +36,14 @@ class Entity(Base):
         onupdate=func.now(),
     )
 
-    # Indexes
-    __table_args__ = (Index("idx_entities_user_kind_name", "user_id", "kind", "name"),)
+    # Constraints and Indexes
+    __table_args__ = (
+        Index("idx_entities_user_kind_name", "user_id", "kind", "name"),
+        CheckConstraint(
+            "kind IN ('person', 'org', 'project', 'topic')",
+            name="ck_entities_kind",
+        ),
+    )
 
     # Relationships
     user = relationship("User", back_populates="entities")

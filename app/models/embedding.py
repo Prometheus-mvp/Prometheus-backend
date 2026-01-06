@@ -4,6 +4,7 @@ import uuid
 
 from pgvector.sqlalchemy import Vector
 from sqlalchemy import (
+    CheckConstraint,
     Column,
     DateTime,
     ForeignKey,
@@ -41,7 +42,7 @@ class Embedding(Base):
     distance_metric = Column(String(50), nullable=False, server_default="cosine")
     embedding = Column(Vector(1536), nullable=False)
     content_hash = Column(String(255), nullable=False)
-    metadata = Column(JSONB, nullable=False, server_default="{}")
+    meta = Column("metadata", JSONB, nullable=False, server_default="{}")
     created_at = Column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
@@ -64,6 +65,14 @@ class Embedding(Base):
         ),
         Index("idx_embeddings_user_object_type", "user_id", "object_type"),
         Index("idx_embeddings_user_content_hash", "user_id", "content_hash"),
+        CheckConstraint(
+            "object_type IN ('event', 'note', 'thread', 'draft', 'entity')",
+            name="ck_embeddings_object_type",
+        ),
+        CheckConstraint(
+            "embedding_dim = 1536",
+            name="ck_embeddings_dim_matches_vector",
+        ),
     )
 
     # Relationships (polymorphic based on object_type)

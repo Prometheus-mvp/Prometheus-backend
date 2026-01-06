@@ -2,7 +2,7 @@
 
 import uuid
 
-from sqlalchemy import Column, DateTime, ForeignKey, Index, Text
+from sqlalchemy import CheckConstraint, Column, DateTime, ForeignKey, Index, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -37,8 +37,14 @@ class CalendarEvent(Base):
         onupdate=func.now(),
     )
 
-    # Indexes
-    __table_args__ = (Index("idx_calendar_events_user_start", "user_id", "start_at"),)
+    # Constraints and Indexes
+    __table_args__ = (
+        Index("idx_calendar_events_user_start", "user_id", "start_at"),
+        CheckConstraint(
+            "end_at > start_at",
+            name="ck_calendar_events_valid_time_range",
+        ),
+    )
 
     # Relationships
     user = relationship("User", back_populates="calendar_events")
