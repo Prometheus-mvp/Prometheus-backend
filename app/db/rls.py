@@ -13,64 +13,46 @@ async def set_user_context(session: AsyncSession, user_id: str) -> None:
     """
     Set Supabase RLS user context for the current session.
 
-    This function sets the auth.uid() function in Supabase to the provided user_id,
-    enabling Row Level Security policies to work correctly.
-
-    Args:
-        session: Database session
-        user_id: User UUID string
+    Supabase RLS relies on request.jwt.claim.sub for auth.uid(). For service-role
+    operations (background jobs, tests) we explicitly set it per connection.
     """
-    # In Supabase, RLS policies use auth.uid() which is automatically set from JWT
-    # However, for service role operations or testing, we may need to set it manually
-    # This is typically done via SET LOCAL or by using the service role key
-    # For most operations, Supabase handles this automatically via JWT
+    if not user_id:
+        raise ValueError("user_id is required to set RLS context")
 
-    # For direct database operations (e.g., background jobs), we might need:
-    # await session.execute(text(f"SET LOCAL request.jwt.claim.sub = '{user_id}'"))
-    # But this is usually handled by Supabase's connection pooling and JWT
-
-    # For now, we'll rely on Supabase's automatic RLS enforcement via JWT
-    # This function is a placeholder for future service role operations
-    pass
+    # SET LOCAL ensures the value only applies to the current transaction.
+    await session.execute(
+        text("SELECT set_config('request.jwt.claim.sub', :user_id, true)"),
+        {"user_id": user_id},
+    )
 
 
-async def verify_rls_enabled(session: AsyncSession, table_name: str) -> bool:
+async def verify_rls_enabled(session: AsyncSession, table_name: str, schema: str = "public") -> bool:
     """
-    Verify that RLS is enabled on a table.
-
-    Args:
-        session: Database session
-        table_name: Name of the table to check
-
-    Returns:
-        True if RLS is enabled, False otherwise
+    Verify that RLS is enabled and at least one policy exists for the table.
     """
     query = text(
         """
-        SELECT tablename, rowsecurity
-        FROM pg_tables
-        WHERE schemaname = 'public' AND tablename = :table_name
-    """
+        SELECT c.relrowsecurity AS rowsecurity, p.polname IS NOT NULL AS has_policy
+        FROM pg_class c
+        JOIN pg_namespace n ON n.oid = c.relnamespace
+        LEFT JOIN pg_policies p ON p.tablename = c.relname AND p.schemaname = n.nspname
+        WHERE n.nspname = :schema AND c.relname = :table_name
+        LIMIT 1
+        """
     )
-    result = await session.execute(query, {"table_name": table_name})
+    result = await session.execute(query, {"schema": schema, "table_name": table_name})
     row = result.fetchone()
-
-    if row:
-        return bool(row.rowsecurity)
-    return False
+    if not row:
+        return False
+    return bool(row.rowsecurity and row.has_policy)
 
 
 async def get_user_id_from_context(session: AsyncSession) -> Optional[str]:
     """
     Get user ID from current session context (if available).
-
-    Args:
-        session: Database session
-
-    Returns:
-        User ID string or None if not available
     """
-    # This would extract user_id from Supabase's JWT context
-    # In practice, Supabase handles this automatically via RLS
-    # This is a placeholder for service role operations
-    return None
+    result = await session.execute(
+        text("SELECT current_setting('request.jwt.claim.sub', true)")
+    )
+    row = result.scalar_one_or_none()
+    return row

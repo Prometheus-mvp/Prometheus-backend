@@ -2,7 +2,7 @@
 
 import uuid
 
-from sqlalchemy import Column, DateTime, ForeignKey, Index, Text
+from sqlalchemy import Column, DateTime, ForeignKey, Index, String, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -24,7 +24,7 @@ class Note(Base):
     )
     title = Column(Text, nullable=True)
     body = Column(Text, nullable=False)
-    content_hash = Column(Text, nullable=False, server_default="")
+    content_hash = Column(String(255), nullable=False, server_default="")
     deleted_at = Column(DateTime(timezone=True), nullable=True)
     created_at = Column(
         DateTime(timezone=True), nullable=False, server_default=func.now()

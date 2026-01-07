@@ -2,7 +2,16 @@
 
 import uuid
 
-from sqlalchemy import Column, DateTime, ForeignKey, Index, Text, UniqueConstraint
+from sqlalchemy import (
+    CheckConstraint,
+    Column,
+    DateTime,
+    ForeignKey,
+    Index,
+    String,
+    Text,
+    UniqueConstraint,
+)
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -27,7 +36,7 @@ class Thread(Base):
     subject = Column(Text, nullable=True)
     participants = Column(JSONB, nullable=False, server_default="[]")
     content_preview = Column(Text, nullable=True)
-    content_hash = Column(Text, nullable=False, server_default="")
+    content_hash = Column(String(255), nullable=False, server_default="")
     last_event_at = Column(DateTime(timezone=True), nullable=True)
     created_at = Column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
@@ -46,6 +55,10 @@ class Thread(Base):
         ),
         Index(
             "idx_threads_user_source_last_event", "user_id", "source", "last_event_at"
+        ),
+        CheckConstraint(
+            "source IN ('slack', 'telegram', 'outlook')",
+            name="ck_threads_source",
         ),
     )
 

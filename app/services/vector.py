@@ -98,7 +98,7 @@ class VectorStore:
                 emb.object_type,
                 emb.object_id,
                 emb.chunk_index,
-                emb.metadata,
+                emb.meta,
                 emb.embedding.cosine_distance(query_embedding).label("score"),
             )
             .where(emb.user_id == user_id)
@@ -134,7 +134,7 @@ class VectorStore:
                 object_id=row.object_id,
                 chunk_index=row.chunk_index,
                 score=row.score,
-                metadata=row.metadata or {},
+                metadata=row.meta or {},
             )
             for row in rows
         ]
@@ -166,20 +166,21 @@ class VectorStore:
     ) -> int:
         """Delete embeddings for events whose occurred_at is before time_end (used for retention)."""
         emb = Embedding
-        evt = Event
-        stmt = (
-            delete(Embedding)
-            .where(
-                emb.user_id == user_id,
-                emb.object_type == "event",
-                emb.object_id == evt.id,
-                evt.occurred_at < time_end,
-            )
-            .where(True)
-            .execution_options(synchronize_session=False)
+        evt_subq = (
+            select(Event.id)
+            .where(Event.user_id == user_id, Event.occurred_at < time_end)
+            .correlate(None)
+        )
+
+        stmt = delete(Embedding).where(
+            emb.user_id == user_id,
+            emb.object_type == "event",
+            emb.object_id.in_(evt_subq),
         )
         if object_types:
             stmt = stmt.where(emb.object_type.in_(object_types))
+
+        stmt = stmt.execution_options(synchronize_session=False)
         result = await session.execute(stmt)
         return result.rowcount or 0
 

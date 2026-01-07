@@ -2,7 +2,7 @@
 
 import uuid
 
-from sqlalchemy import Column, DateTime, ForeignKey, Index, Text
+from sqlalchemy import CheckConstraint, Column, DateTime, ForeignKey, Index, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -46,9 +46,13 @@ class OAuthToken(Base):
         onupdate=func.now(),
     )
 
-    # Indexes
+    # Constraints and Indexes
     __table_args__ = (
         Index("idx_oauth_tokens_user_linked_account", "user_id", "linked_account_id"),
+        CheckConstraint(
+            "token_type IN ('bearer', 'bot')",
+            name="ck_oauth_tokens_token_type",
+        ),
     )
 
     # Relationships

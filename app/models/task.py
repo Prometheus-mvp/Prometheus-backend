@@ -2,7 +2,7 @@
 
 import uuid
 
-from sqlalchemy import Column, DateTime, ForeignKey, Index, Text
+from sqlalchemy import CheckConstraint, Column, DateTime, ForeignKey, Index, Text
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -22,7 +22,7 @@ class Task(Base):
         nullable=False,
         index=True,
     )
-    status = Column(Text, nullable=False)  # open | done | snoozed
+    status = Column(Text, nullable=False, server_default="open")  # open | done | snoozed
     priority = Column(
         Text, nullable=False, server_default="medium"
     )  # low | medium | high
@@ -43,9 +43,17 @@ class Task(Base):
         onupdate=func.now(),
     )
 
-    # Indexes
+    # Constraints and Indexes
     __table_args__ = (
         Index("idx_tasks_user_status_due", "user_id", "status", "due_at"),
+        CheckConstraint(
+            "status IN ('open', 'done', 'snoozed')",
+            name="ck_tasks_status",
+        ),
+        CheckConstraint(
+            "priority IN ('low', 'medium', 'high')",
+            name="ck_tasks_priority",
+        ),
     )
 
     # Relationships

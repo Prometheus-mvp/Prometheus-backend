@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import hashlib
 import logging
 from dataclasses import dataclass
@@ -55,20 +56,26 @@ class EmbeddingService:
         self.logger = logging.getLogger(self.__class__.__name__)
 
     async def embed_text(self, texts: Sequence[str]) -> List[List[float]]:
-        """Call OpenAI embeddings API."""
-        try:
-            resp = await self.client.embeddings.create(
-                model=self.model, input=list(texts)
-            )
-            return [item.embedding for item in resp.data]
-        except OpenAIError as exc:
-            self.logger.error("Embedding request failed", extra={"error": str(exc)})
-            raise RuntimeError("Embedding request failed") from exc
-        except Exception as exc:
-            self.logger.error(
-                "Embedding response parsing failed", extra={"error": str(exc)}
-            )
-            raise RuntimeError("Embedding response invalid") from exc
+        """Call OpenAI embeddings API with basic retry and timeout."""
+        attempts = 3
+        for attempt in range(attempts):
+            try:
+                resp = await self.client.embeddings.create(
+                    model=self.model, input=list(texts), timeout=30
+                )
+                return [item.embedding for item in resp.data]
+            except OpenAIError as exc:
+                if attempt == attempts - 1:
+                    self.logger.error(
+                        "Embedding request failed", extra={"error": str(exc)}
+                    )
+                    raise RuntimeError("Embedding request failed") from exc
+                await asyncio.sleep(0.5 * (attempt + 1))
+            except Exception as exc:
+                self.logger.error(
+                    "Embedding response parsing failed", extra={"error": str(exc)}
+                )
+                raise RuntimeError("Embedding response invalid") from exc
 
     async def embed_and_store(
         self,

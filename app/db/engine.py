@@ -1,6 +1,7 @@
 """SQLAlchemy async engine creation with connection pooling."""
 
 import logging
+from typing import Final
 
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 from sqlalchemy.pool import NullPool, QueuePool
@@ -9,9 +10,14 @@ from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
-# Convert postgresql:// to postgresql+asyncpg:// for async support
-# Using asyncpg driver for async SQLAlchemy 2.0
-database_url = settings.database_url.replace("postgresql://", "postgresql+asyncpg://")
+# Normalize database URL for async usage
+RAW_DATABASE_URL: Final[str] = settings.database_url
+if RAW_DATABASE_URL.startswith("postgresql+asyncpg://"):
+    database_url = RAW_DATABASE_URL
+elif RAW_DATABASE_URL.startswith("postgresql://"):
+    database_url = RAW_DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
+else:
+    database_url = RAW_DATABASE_URL  # allow custom schemes; rely on caller to be correct
 
 
 def create_engine() -> AsyncEngine:
@@ -32,6 +38,7 @@ def create_engine() -> AsyncEngine:
         max_overflow=20,  # Additional connections beyond pool_size
         pool_pre_ping=True,  # Verify connections before using
         echo=settings.is_development,  # Log SQL queries in development
+        pool_recycle=1800,  # recycle connections periodically to avoid stale sockets
     )
 
     logger.info("Database engine created successfully")

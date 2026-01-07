@@ -2,7 +2,7 @@
 
 import uuid
 
-from sqlalchemy import Column, DateTime, ForeignKey, Index, String
+from sqlalchemy import CheckConstraint, Column, DateTime, ForeignKey, Index, String
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -38,9 +38,13 @@ class Draft(Base):
         onupdate=func.now(),
     )
 
-    # Indexes
+    # Constraints and Indexes
     __table_args__ = (
         Index("idx_drafts_user_kind_created", "user_id", "kind", "created_at"),
+        CheckConstraint(
+            "kind IN ('slack_reply', 'telegram_reply', 'outlook_reply', 'note')",
+            name="ck_drafts_kind",
+        ),
     )
 
     # Relationships

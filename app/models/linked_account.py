@@ -2,7 +2,15 @@
 
 import uuid
 
-from sqlalchemy import Column, DateTime, ForeignKey, Index, Text, UniqueConstraint
+from sqlalchemy import (
+    CheckConstraint,
+    Column,
+    DateTime,
+    ForeignKey,
+    Index,
+    Text,
+    UniqueConstraint,
+)
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -28,7 +36,7 @@ class LinkedAccount(Base):
     status = Column(
         Text, nullable=False, server_default="active"
     )  # active | revoked | error
-    metadata = Column(JSONB, nullable=False, server_default="{}")
+    meta = Column("metadata", JSONB, nullable=False, server_default="{}")
     created_at = Column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
@@ -48,6 +56,14 @@ class LinkedAccount(Base):
             name="uq_linked_accounts_user_provider_account",
         ),
         Index("idx_linked_accounts_user_provider", "user_id", "provider"),
+        CheckConstraint(
+            "provider IN ('slack', 'telegram', 'outlook')",
+            name="ck_linked_accounts_provider",
+        ),
+        CheckConstraint(
+            "status IN ('active', 'revoked', 'error')",
+            name="ck_linked_accounts_status",
+        ),
     )
 
     # Relationships
