@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import logging
 from typing import Any, Dict
 
@@ -40,7 +41,6 @@ class AgentBase:
             content = resp.choices[0].message.content
             if not content:
                 return {}
-            import json
 
             return json.loads(content)
         except OpenAIError as exc:
