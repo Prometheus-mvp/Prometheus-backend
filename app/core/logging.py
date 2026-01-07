@@ -53,3 +53,47 @@ def setup_logging(log_level: str = "INFO") -> None:
     logging.getLogger("uvicorn").setLevel(logging.WARNING)
     logging.getLogger("sqlalchemy.engine").setLevel(logging.WARNING)
     logging.getLogger("httpx").setLevel(logging.WARNING)
+
+
+def get_uvicorn_log_config() -> Dict[str, Any]:
+    """
+    Return a minimal log_config dict for uvicorn compatibility.
+    This prevents uvicorn from failing during reload when it tries to configure logging.
+    """
+    return {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "formatters": {
+            "default": {
+                "format": "%(levelname)s [%(name)s] %(message)s",
+            },
+        },
+        "handlers": {
+            "default": {
+                "class": "logging.StreamHandler",
+                "formatter": "default",
+                "stream": "ext://sys.stdout",
+            },
+        },
+        "loggers": {
+            "uvicorn": {
+                "handlers": ["default"],
+                "level": "WARNING",
+                "propagate": False,
+            },
+            "uvicorn.error": {
+                "handlers": ["default"],
+                "level": "WARNING",
+                "propagate": False,
+            },
+            "uvicorn.access": {
+                "handlers": ["default"],
+                "level": "WARNING",
+                "propagate": False,
+            },
+        },
+        "root": {
+            "level": "INFO",
+            "handlers": ["default"],
+        },
+    }

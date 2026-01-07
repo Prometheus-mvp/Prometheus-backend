@@ -10,7 +10,6 @@ from app.schemas.calendar import (
 from app.schemas.connector import (
     LinkedAccountBase,
     LinkedAccountResponse,
-    OAuthCallbackRequest,
     OAuthCallbackResponse,
     OAuthInitiateResponse,
     TelegramAuthInitiateRequest,
