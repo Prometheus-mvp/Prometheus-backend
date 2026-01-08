@@ -6,6 +6,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional, Tuple
 
 import httpx
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
@@ -207,6 +208,8 @@ class OutlookConnector(BaseConnector):
                 )
             except Exception:
                 start_dt = datetime.now(timezone.utc)
+            # Extract body preview for embedding (not stored in event)
+            body_preview = item.get("bodyPreview")
             events.append(
                 {
                     "source": "outlook",
@@ -215,14 +218,18 @@ class OutlookConnector(BaseConnector):
                     "thread_id": None,
                     "event_type": "calendar",
                     "title": item.get("subject"),
-                    "body": item.get("bodyPreview"),
+                    # Note: body/text_for_embedding removed - messages not stored
                     "url": item.get("webLink"),
-                    "text_for_embedding": item.get("bodyPreview"),
                     "content_hash": item.get("id") or "",
                     "importance_score": 0,
                     "occurred_at": start_dt,
                     "expires_at": start_dt + timedelta(days=30),
-                    "raw": item,
+                    "raw": {
+                        "item_id": item.get("id"),
+                        "subject": item.get("subject"),
+                    },
+                    # Temporary field for embedding generation (not stored in DB)
+                    "_embedding_text": body_preview,
                 }
             )
 

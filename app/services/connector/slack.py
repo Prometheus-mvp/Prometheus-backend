@@ -6,6 +6,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional, Tuple
 
 import httpx
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
@@ -204,6 +205,11 @@ class SlackConnector(BaseConnector):
             if not hist_json.get("ok"):
                 continue
             for msg in hist_json.get("messages", []):
+                # Extract message text for embedding (not stored in event)
+                message_text = msg.get("text")
+                occurred_at = datetime.fromtimestamp(
+                    float(msg.get("ts", "0")), tz=timezone.utc
+                )
                 events.append(
                     {
                         "source": "slack",
@@ -212,16 +218,18 @@ class SlackConnector(BaseConnector):
                         "thread_id": None,
                         "event_type": "message",
                         "title": None,
-                        "body": msg.get("text"),
+                        # Note: body/text_for_embedding removed - messages not stored
                         "url": None,
-                        "text_for_embedding": msg.get("text"),
                         "content_hash": msg.get("ts") or "",
                         "importance_score": 0,
-                        "occurred_at": datetime.fromtimestamp(
-                            float(msg.get("ts", "0")), tz=timezone.utc
-                        ),
+                        "occurred_at": occurred_at,
                         "expires_at": datetime.now(timezone.utc) + timedelta(days=30),
-                        "raw": msg,
+                        "raw": {
+                            "channel": ch.get("id"),
+                            "message_id": msg.get("ts"),
+                        },
+                        # Temporary field for embedding generation (not stored in DB)
+                        "_embedding_text": message_text,
                     }
                 )
 

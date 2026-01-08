@@ -51,7 +51,7 @@ class Draft(Base):
     user = relationship("User", back_populates="drafts")
     embeddings = relationship(
         "Embedding",
-        back_populates="draft",
-        foreign_keys="Embedding.object_id",
         primaryjoin="and_(Embedding.object_type=='draft', Embedding.object_id==Draft.id)",
+        foreign_keys="Embedding.object_id",
+        viewonly=True,  # Required for polymorphic relationships
     )

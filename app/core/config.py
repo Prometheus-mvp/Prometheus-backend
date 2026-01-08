@@ -51,6 +51,12 @@ class Settings(BaseSettings):
     api_host: str = "0.0.0.0"
     api_port: int = 8000
 
+    # Ranking configuration (hybrid semantic+recency)
+    ranking_alpha: float = 0.85  # Semantic weight (0.0-1.0), default 0.85
+    ranking_tau_days: float = 14.0  # Recency decay half-life in days, default 14
+    rerank_candidates_topn: int = 50  # Stage A candidates before reranking, default 50
+    ranking_mode: str = "weighted"  # "weighted" or "multiplier", default "weighted"
+
     @property
     def is_production(self) -> bool:
         """Check if running in production environment."""

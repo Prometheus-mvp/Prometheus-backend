@@ -5,6 +5,7 @@ from typing import Any, Dict, List, Optional, Tuple
 import logging
 from datetime import datetime, timedelta, timezone
 
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from telethon import TelegramClient
 from telethon.sessions import StringSession
@@ -162,6 +163,8 @@ class TelegramConnector(BaseConnector):
         # Fetch last 50 messages from dialogs
         async for dialog in client.iter_dialogs(limit=5):
             async for message in client.iter_messages(dialog.id, limit=50):
+                # Extract message text for embedding (not stored in event)
+                message_text = message.message or ""
                 events.append(
                     {
                         "source": "telegram",
@@ -170,16 +173,18 @@ class TelegramConnector(BaseConnector):
                         "thread_id": None,
                         "event_type": "message",
                         "title": None,
-                        "body": message.message or "",
+                        # Note: body/text_for_embedding removed - messages not stored
                         "url": None,
-                        "text_for_embedding": message.message or "",
                         "content_hash": str(message.id),
                         "importance_score": 0,
                         "occurred_at": message.date,
                         "expires_at": datetime.now(timezone.utc) + timedelta(days=30),
-                        "raw": (
-                            message.to_dict() if hasattr(message, "to_dict") else {}
-                        ),
+                        "raw": {
+                            "dialog_id": dialog.id,
+                            "message_id": message.id,
+                        },
+                        # Temporary field for embedding generation (not stored in DB)
+                        "_embedding_text": message_text,
                     }
                 )
 

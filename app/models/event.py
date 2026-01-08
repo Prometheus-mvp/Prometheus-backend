@@ -46,9 +46,8 @@ class Event(Base):
         Text, nullable=False
     )  # message | reaction | mention | file | email | calendar_created etc.
     title = Column(Text, nullable=True)
-    body = Column(Text, nullable=True)
+    # Note: body and text_for_embedding removed - messages not stored, only used for embeddings
     url = Column(Text, nullable=True)
-    text_for_embedding = Column(Text, nullable=True)
     content_hash = Column(String(255), nullable=False, server_default="")
     importance_score = Column(SmallInteger, nullable=False, server_default="0")
     occurred_at = Column(DateTime(timezone=True), nullable=False)
@@ -98,7 +97,7 @@ class Event(Base):
     )
     embeddings = relationship(
         "Embedding",
-        back_populates="event",
-        foreign_keys="Embedding.object_id",
         primaryjoin="and_(Embedding.object_type=='event', Embedding.object_id==Event.id)",
+        foreign_keys="Embedding.object_id",
+        viewonly=True,  # Required for polymorphic relationships
     )

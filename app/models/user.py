@@ -58,3 +58,6 @@ class User(Base):
     embeddings = relationship(
         "Embedding", back_populates="user", cascade="all, delete-orphan"
     )
+    agent_executions = relationship(
+        "AgentExecution", back_populates="user", cascade="all, delete-orphan"
+    )
