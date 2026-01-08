@@ -97,7 +97,7 @@ class Event(Base):
     )
     embeddings = relationship(
         "Embedding",
-        back_populates="event",
-        foreign_keys="Embedding.object_id",
         primaryjoin="and_(Embedding.object_type=='event', Embedding.object_id==Event.id)",
+        foreign_keys="Embedding.object_id",
+        viewonly=True,  # Required for polymorphic relationships
     )

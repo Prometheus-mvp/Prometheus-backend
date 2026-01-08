@@ -43,7 +43,7 @@ class Note(Base):
     user = relationship("User", back_populates="notes")
     embeddings = relationship(
         "Embedding",
-        back_populates="note",
-        foreign_keys="Embedding.object_id",
         primaryjoin="and_(Embedding.object_type=='note', Embedding.object_id==Note.id)",
+        foreign_keys="Embedding.object_id",
+        viewonly=True,  # Required for polymorphic relationships
     )

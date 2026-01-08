@@ -42,7 +42,7 @@ class TestQueryAgent:
         from app.agents.query_graph import QueryAgent
 
         with patch(
-            "app.agents.query_graph.ingest_events_for_user",
+            "app.jobs.ingestion.ingest_events_for_user",
             new_callable=AsyncMock,
         ) as mock_ingest:
             mock_ingest.return_value = 5

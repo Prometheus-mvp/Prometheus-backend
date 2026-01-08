@@ -83,29 +83,21 @@ class Embedding(Base):
     user = relationship("User", back_populates="embeddings")
     event = relationship(
         "Event",
-        back_populates="embeddings",
-        foreign_keys="Event.id",
-        primaryjoin="and_(Embedding.object_type=='event', Embedding.object_id==Event.id)",
+        primaryjoin="and_(Embedding.object_type=='event', foreign(Embedding.object_id)==Event.id)",
         viewonly=True,
     )
     note = relationship(
         "Note",
-        back_populates="embeddings",
-        foreign_keys="Note.id",
-        primaryjoin="and_(Embedding.object_type=='note', Embedding.object_id==Note.id)",
+        primaryjoin="and_(Embedding.object_type=='note', foreign(Embedding.object_id)==Note.id)",
         viewonly=True,
     )
     draft = relationship(
         "Draft",
-        back_populates="embeddings",
-        foreign_keys="Draft.id",
-        primaryjoin="and_(Embedding.object_type=='draft', Embedding.object_id==Draft.id)",
+        primaryjoin="and_(Embedding.object_type=='draft', foreign(Embedding.object_id)==Draft.id)",
         viewonly=True,
     )
     entity = relationship(
         "Entity",
-        back_populates="embeddings",
-        foreign_keys="Entity.id",
-        primaryjoin="and_(Embedding.object_type=='entity', Embedding.object_id==Entity.id)",
+        primaryjoin="and_(Embedding.object_type=='entity', foreign(Embedding.object_id)==Entity.id)",
         viewonly=True,
     )
