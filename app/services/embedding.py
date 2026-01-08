@@ -6,7 +6,8 @@ import asyncio
 import hashlib
 import logging
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Sequence
+from datetime import datetime
+from typing import Any, Dict, List, Optional, Sequence
 
 from openai import AsyncOpenAI, OpenAIError
 
@@ -38,7 +39,8 @@ class EmbeddingObject:
     object_id: str
     text: str
     content_hash: Optional[str] = None
-    metadata: Optional[Dict] = None
+    metadata: Optional[Dict[str, Any]] = None
+    occurred_at: Optional[datetime] = None  # For recency score calculation
 
 
 class EmbeddingService:
@@ -86,6 +88,7 @@ class EmbeddingService:
         """
         Generate embeddings for given objects and store via VectorStore.
         Skips objects if hashes match existing rows.
+        Calculates recency_score based on occurred_at timestamp.
         """
         total = 0
         for obj in objects:
@@ -106,6 +109,7 @@ class EmbeddingService:
                     embedding_model=self.model,
                     content_hash=content_hash,
                     metadata=obj.metadata or {},
+                    occurred_at=obj.occurred_at,  # For recency score calculation
                 )
                 total += 1
         return total

@@ -1,5 +1,6 @@
 """Database models."""
 
+from app.models.agent_execution import AgentExecution
 from app.models.calendar_event import CalendarEvent
 from app.models.draft import Draft
 from app.models.embedding import Embedding
@@ -15,6 +16,7 @@ from app.models.thread import Thread
 from app.models.user import User
 
 __all__ = [
+    "AgentExecution",
     "User",
     "LinkedAccount",
     "OAuthToken",

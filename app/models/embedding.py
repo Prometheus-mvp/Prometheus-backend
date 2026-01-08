@@ -7,6 +7,7 @@ from sqlalchemy import (
     CheckConstraint,
     Column,
     DateTime,
+    Float,
     ForeignKey,
     Index,
     Integer,
@@ -43,6 +44,9 @@ class Embedding(Base):
     embedding = Column(Vector(1536), nullable=False)
     content_hash = Column(String(255), nullable=False)
     meta = Column("metadata", JSONB, nullable=False, server_default="{}")
+    recency_score = Column(
+        Float, nullable=True, index=True
+    )  # Stored recency score [0, 1] calculated at embedding creation
     created_at = Column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
