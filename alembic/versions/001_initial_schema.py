@@ -12,7 +12,7 @@ from sqlalchemy.dialects import postgresql
 from pgvector.sqlalchemy import Vector
 
 # revision identifiers
-revision = "001_initial_schema"
+revision = "001"
 down_revision = None
 branch_labels = None
 depends_on = None

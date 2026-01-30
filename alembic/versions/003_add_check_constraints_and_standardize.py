@@ -10,8 +10,8 @@ from alembic import op
 import sqlalchemy as sa
 
 # revision identifiers
-revision = "003_add_check_constraints_and_standardize"
-down_revision = "001_initial_schema"
+revision = "003"
+down_revision = "001"
 branch_labels = None
 depends_on = None
 

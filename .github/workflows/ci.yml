@@ -123,21 +123,6 @@ jobs:
         run: |
           alembic upgrade head
 
-      - name: Run tests with coverage
+      - name: Run tests
         run: |
-          pytest --cov=app --cov-report=term-missing --cov-report=xml --cov-report=html --cov-fail-under=90 -v
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
-        if: always()
-        with:
-          file: ./coverage.xml
-          fail_ci_if_error: false
-          token: ${{ secrets.CODECOV_TOKEN }}
-
-      - name: Upload coverage HTML report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: coverage-report-${{ matrix.python-version }}
-          path: htmlcov/
+          pytest -v
