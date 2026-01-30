@@ -2,7 +2,6 @@
 
 import pytest
 from unittest.mock import Mock, AsyncMock, patch
-from datetime import datetime, timezone
 from uuid import uuid4
 
 

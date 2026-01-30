@@ -11,7 +11,6 @@ async def test_slack_oauth_initiate():
     from app.api.v1.connectors import slack_oauth_initiate
 
     user_id = str(uuid4())
-    mock_db = AsyncMock()
 
     with patch("app.api.v1.connectors.slack_connector") as mock_slack:
         mock_slack.build_auth_url = AsyncMock(
