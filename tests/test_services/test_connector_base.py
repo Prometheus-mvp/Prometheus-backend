@@ -17,14 +17,10 @@ async def test_base_connector_store_tokens():
         async def build_auth_url(self, user_id: str):
             return ("https://example.com", "state")
 
-        async def handle_callback(
-            self, session: AsyncSession, user_id: str, **kwargs
-        ):
+        async def handle_callback(self, session: AsyncSession, user_id: str, **kwargs):
             return None
 
-        async def fetch_events(
-            self, session: AsyncSession, user_id: str, since=None
-        ):
+        async def fetch_events(self, session: AsyncSession, user_id: str, since=None):
             return []
 
     connector = TestConnector()
@@ -64,14 +60,10 @@ async def test_base_connector_get_latest_token():
         async def build_auth_url(self, user_id: str):
             return ("https://example.com", "state")
 
-        async def handle_callback(
-            self, session: AsyncSession, user_id: str, **kwargs
-        ):
+        async def handle_callback(self, session: AsyncSession, user_id: str, **kwargs):
             return None
 
-        async def fetch_events(
-            self, session: AsyncSession, user_id: str, since=None
-        ):
+        async def fetch_events(self, session: AsyncSession, user_id: str, since=None):
             return []
 
     connector = TestConnector()

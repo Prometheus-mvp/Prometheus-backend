@@ -74,9 +74,7 @@ async def test_slack_fetch_events():
         connector, "_ensure_access_token", new_callable=AsyncMock
     ) as mock_ensure:
         mock_ensure.return_value = "xoxb-token"
-        with patch.object(
-            connector._client, "get", new_callable=AsyncMock
-        ) as mock_get:
+        with patch.object(connector._client, "get", new_callable=AsyncMock) as mock_get:
             mock_get.side_effect = [
                 Mock(json=lambda: {"ok": True, "channels": [{"id": "C1"}]}),
                 Mock(

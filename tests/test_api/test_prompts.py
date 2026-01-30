@@ -39,6 +39,7 @@ def test_prompts_missing_intent(client, monkeypatch):
     async def fake_complete_json(self, prompt, schema):
         # Return sources and time range for extractors to skip clarification
         from datetime import datetime, timezone, timedelta
+
         if "sources" in str(schema):
             return {"sources": ["slack"], "confidence": 0.9, "explicit": True}
         elif "start_time" in str(schema):
@@ -60,7 +61,9 @@ def test_prompts_missing_intent(client, monkeypatch):
             # Return unknown intent directly to test error handling
             return "unknown"
         # For other agents, use original implementation (won't be reached in this test)
-        return await original_execute_agent(self, agent_name, agent_method, *args, **kwargs)
+        return await original_execute_agent(
+            self, agent_name, agent_method, *args, **kwargs
+        )
 
     monkeypatch.setattr(AgentOrchestrator, "execute_agent", fake_execute_agent)
     monkeypatch.setattr(AgentBase, "complete_json", fake_complete_json)
