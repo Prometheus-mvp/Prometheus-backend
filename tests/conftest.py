@@ -32,6 +32,7 @@ def dummy_session():
 
 @pytest.fixture
 def dummy_vector_results():
+    """Dummy vector results with recency scores for hybrid ranking."""
     class V:
         def __init__(
             self,
@@ -40,6 +41,9 @@ def dummy_vector_results():
             chunk_index=0,
             score=0.1,
             metadata=None,
+            recency_score=0.8,
+            semantic_score=0.9,
+            final_score=0.85,
         ):
             self.object_type = object_type
             self.object_id = object_id
@@ -47,5 +51,9 @@ def dummy_vector_results():
             self.score = score
             self.metadata = metadata or {}
             self.id = "emb"
+            # New fields for hybrid ranking
+            self.recency_score = recency_score
+            self.semantic_score = semantic_score
+            self.final_score = final_score
 
     return [V()]

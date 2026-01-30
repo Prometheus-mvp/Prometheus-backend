@@ -49,7 +49,7 @@ class Entity(Base):
     user = relationship("User", back_populates="entities")
     embeddings = relationship(
         "Embedding",
-        back_populates="entity",
-        foreign_keys="Embedding.object_id",
         primaryjoin="and_(Embedding.object_type=='entity', Embedding.object_id==Entity.id)",
+        foreign_keys="Embedding.object_id",
+        viewonly=True,  # Required for polymorphic relationships
     )

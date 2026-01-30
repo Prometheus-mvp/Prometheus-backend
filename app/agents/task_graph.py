@@ -1,9 +1,13 @@
-"""Task detection agent workflow."""
+"""Task detection agent workflow - Neither Push nor Pull.
+
+This agent is responsible for performing tasks.
+It is neither push-based nor pull-based.
+"""
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
-from typing import Any, Dict, List, Optional
+from datetime import datetime
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -12,16 +16,24 @@ from app.models import Task
 from app.services.embedding import EmbeddingService
 from app.services.vector import VectorStore
 
+if TYPE_CHECKING:
+    from app.agents.orchestrator import AgentOrchestrator
+
 
 class TaskAgent(AgentBase):
-    """Agent that detects actionable tasks."""
+    """
+    Task detection agent - neither push nor pull based.
+    
+    Responsible for identifying and creating actionable tasks.
+    """
 
     def __init__(
         self,
         vector_store: Optional[VectorStore] = None,
         embedding_service: Optional[EmbeddingService] = None,
+        orchestrator: Optional["AgentOrchestrator"] = None,
     ):
-        super().__init__()
+        super().__init__(orchestrator=orchestrator)
         self.vector_store = vector_store or VectorStore()
         self.embedding_service = embedding_service or EmbeddingService(
             vector_store=self.vector_store
@@ -33,14 +45,16 @@ class TaskAgent(AgentBase):
         *,
         user_id: str,
         prompt: str,
-        sources: Optional[List[str]] = None,
-        hours: int = 24,
+        time_start: datetime,
+        time_end: datetime,
+        sources: List[str],
     ) -> Dict[str, Any]:
-        """Identify tasks from recent events."""
-        time_end = datetime.now(timezone.utc)
-        time_start = time_end - timedelta(hours=hours)
-
-        # Retrieve top events
+        """
+        Identify actionable tasks from events in the specified time range.
+        
+        Uses stored recency scores in hybrid ranking.
+        """
+        # Retrieve top events (uses stored recency_score)
         query_vector = (await self.embedding_service.embed_text([prompt]))[0]
         vector_results = await self.vector_store.search(
             session,
@@ -51,11 +65,18 @@ class TaskAgent(AgentBase):
             time_start=time_start,
             time_end=time_end,
             sources=sources,
+            query_text=prompt,
         )
 
+        # Build context (no message content, only metadata)
         context_lines = []
         for vr in vector_results:
-            context_lines.append(f"- [{vr.object_type}:{vr.object_id}] {vr.metadata}")
+            score_info = f"Score: {vr.final_score:.3f}" if vr.final_score else ""
+            if vr.semantic_score is not None and vr.recency_score is not None:
+                score_info += f" (sem: {vr.semantic_score:.3f}, rec: {vr.recency_score:.3f})"
+            context_lines.append(
+                f"- [{vr.object_type}:{vr.object_id}] {score_info} {vr.metadata}"
+            )
         context = "\n".join(context_lines)
 
         llm_prompt = (

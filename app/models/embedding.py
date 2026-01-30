@@ -7,6 +7,7 @@ from sqlalchemy import (
     CheckConstraint,
     Column,
     DateTime,
+    Float,
     ForeignKey,
     Index,
     Integer,
@@ -43,6 +44,9 @@ class Embedding(Base):
     embedding = Column(Vector(1536), nullable=False)
     content_hash = Column(String(255), nullable=False)
     meta = Column("metadata", JSONB, nullable=False, server_default="{}")
+    recency_score = Column(
+        Float, nullable=True, index=True
+    )  # Stored recency score [0, 1] calculated at embedding creation
     created_at = Column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
@@ -79,29 +83,21 @@ class Embedding(Base):
     user = relationship("User", back_populates="embeddings")
     event = relationship(
         "Event",
-        back_populates="embeddings",
-        foreign_keys="Event.id",
-        primaryjoin="and_(Embedding.object_type=='event', Embedding.object_id==Event.id)",
+        primaryjoin="and_(Embedding.object_type=='event', foreign(Embedding.object_id)==Event.id)",
         viewonly=True,
     )
     note = relationship(
         "Note",
-        back_populates="embeddings",
-        foreign_keys="Note.id",
-        primaryjoin="and_(Embedding.object_type=='note', Embedding.object_id==Note.id)",
+        primaryjoin="and_(Embedding.object_type=='note', foreign(Embedding.object_id)==Note.id)",
         viewonly=True,
     )
     draft = relationship(
         "Draft",
-        back_populates="embeddings",
-        foreign_keys="Draft.id",
-        primaryjoin="and_(Embedding.object_type=='draft', Embedding.object_id==Draft.id)",
+        primaryjoin="and_(Embedding.object_type=='draft', foreign(Embedding.object_id)==Draft.id)",
         viewonly=True,
     )
     entity = relationship(
         "Entity",
-        back_populates="embeddings",
-        foreign_keys="Entity.id",
-        primaryjoin="and_(Embedding.object_type=='entity', Embedding.object_id==Entity.id)",
+        primaryjoin="and_(Embedding.object_type=='entity', foreign(Embedding.object_id)==Entity.id)",
         viewonly=True,
     )
