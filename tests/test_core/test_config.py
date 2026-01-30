@@ -59,6 +59,7 @@ def test_settings_defaults():
             "OUTLOOK_CLIENT_ID": "outlook-id",
             "OUTLOOK_CLIENT_SECRET": "outlook-secret",
             "OUTLOOK_REDIRECT_URI": "http://localhost/outlook",
+            "ENVIRONMENT": "development",  # assert default; CI may set ENVIRONMENT=test
         },
     ):
         settings = Settings()
