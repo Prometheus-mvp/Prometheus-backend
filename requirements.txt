@@ -42,7 +42,7 @@ pytest-mock==3.14.0  # Mocking for external APIs and services
 pytest-xdist>=3.6.1  # Parallel test execution (3.6.0 was yanked)
 
 # Development
-black==24.8.0
+black==25.9.0
 ruff==0.6.0
 mypy==1.11.0
 
