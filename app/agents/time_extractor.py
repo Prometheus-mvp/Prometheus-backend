@@ -27,14 +27,14 @@ class TimeRangeExtractor(AgentBase):
     ) -> Dict[str, Any]:
         """
         Extract start_time and end_time from prompt.
-        
+
         Parses natural language like:
         - "last 2 hours"
         - "yesterday"
         - "Jan 1 to Jan 5"
         - "this week"
         - "past 24 hours"
-        
+
         Returns:
             {
                 "start_time": datetime or None,
@@ -54,9 +54,7 @@ class TimeRangeExtractor(AgentBase):
         # Use LLM for more complex parsing
         return await self._llm_extract(prompt, now)
 
-    def _try_simple_patterns(
-        self, prompt: str, now: datetime
-    ) -> Dict[str, Any]:
+    def _try_simple_patterns(self, prompt: str, now: datetime) -> Dict[str, Any]:
         """Try simple regex patterns for common time expressions."""
         # Pattern: "last N hours"
         match = re.search(r"last\s+(\d+)\s*hours?", prompt)
@@ -149,9 +147,7 @@ class TimeRangeExtractor(AgentBase):
             "explicit": False,
         }
 
-    async def _llm_extract(
-        self, prompt: str, now: datetime
-    ) -> Dict[str, Any]:
+    async def _llm_extract(self, prompt: str, now: datetime) -> Dict[str, Any]:
         """Use LLM for complex time extraction."""
         llm_prompt = f"""
 Extract the time range from the user's request.
@@ -216,4 +212,3 @@ Always ensure end_time > start_time if both are specified.
 time_extractor = TimeRangeExtractor()
 
 __all__ = ["TimeRangeExtractor", "time_extractor"]
-

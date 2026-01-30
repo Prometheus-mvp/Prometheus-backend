@@ -169,4 +169,3 @@ class TestTimeRangeExtractor:
 
             assert result["start_time"] is None
             assert result["end_time"] is None
-

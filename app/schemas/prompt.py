@@ -36,4 +36,3 @@ class PromptResponse(BaseModel):
     response: Dict[str, Any]
     clarification_needed: Optional[PromptClarificationRequest] = None
     execution_id: Optional[str] = None  # Link to agent execution record
-

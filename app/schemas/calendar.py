@@ -14,8 +14,12 @@ class CalendarEventBase(BaseModel):
     description: Optional[str] = Field(
         None, max_length=5000, description="Event description"
     )
-    start_at: datetime = Field(..., description="Event start date and time (timezone-aware)")
-    end_at: datetime = Field(..., description="Event end date and time (timezone-aware)")
+    start_at: datetime = Field(
+        ..., description="Event start date and time (timezone-aware)"
+    )
+    end_at: datetime = Field(
+        ..., description="Event end date and time (timezone-aware)"
+    )
     location: Optional[str] = Field(None, max_length=500, description="Event location")
 
     @model_validator(mode="after")
@@ -35,12 +39,18 @@ class CalendarEventCreate(CalendarEventBase):
 class CalendarEventUpdate(BaseModel):
     """Calendar event update schema."""
 
-    title: Optional[str] = Field(None, min_length=1, max_length=500, description="Event title")
+    title: Optional[str] = Field(
+        None, min_length=1, max_length=500, description="Event title"
+    )
     description: Optional[str] = Field(
         None, max_length=5000, description="Event description"
     )
-    start_at: Optional[datetime] = Field(None, description="Event start date and time (timezone-aware)")
-    end_at: Optional[datetime] = Field(None, description="Event end date and time (timezone-aware)")
+    start_at: Optional[datetime] = Field(
+        None, description="Event start date and time (timezone-aware)"
+    )
+    end_at: Optional[datetime] = Field(
+        None, description="Event end date and time (timezone-aware)"
+    )
     location: Optional[str] = Field(None, max_length=500, description="Event location")
 
     @model_validator(mode="after")
@@ -67,5 +77,7 @@ class CalendarEventResponse(CalendarEventBase):
 class CalendarEventListResponse(BaseModel):
     """Calendar event list response schema."""
 
-    events: List[CalendarEventResponse] = Field(..., description="List of calendar events")
+    events: List[CalendarEventResponse] = Field(
+        ..., description="List of calendar events"
+    )
     total: int = Field(..., description="Total number of events")

@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 class AgentOrchestrator:
     """
     Orchestrates agent execution and manages inter-agent communication.
-    
+
     All agent calls should go through the orchestrator to:
     - Persist execution results for context sharing
     - Enable inter-agent communication
@@ -46,7 +46,7 @@ class AgentOrchestrator:
     ) -> Dict[str, Any]:
         """
         Execute an agent and persist the result.
-        
+
         All agent calls must go through orchestrator for:
         - Execution persistence
         - Result caching
@@ -120,7 +120,7 @@ class AgentOrchestrator:
     ) -> Optional[Dict[str, Any]]:
         """
         Retrieve previous agent execution results for use as context.
-        
+
         Agents can call this to get outputs from other agents.
         Used for inter-agent communication.
         """
@@ -153,7 +153,7 @@ class AgentOrchestrator:
     ) -> List[Dict[str, Any]]:
         """
         Get recent executions from multiple agents for context.
-        
+
         Useful for building comprehensive context from multiple agent outputs.
         """
         cutoff = datetime.now(timezone.utc) - timedelta(hours=hours)
@@ -198,4 +198,3 @@ class AgentOrchestrator:
 
 
 __all__ = ["AgentOrchestrator"]
-

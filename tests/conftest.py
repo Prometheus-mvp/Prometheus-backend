@@ -33,6 +33,7 @@ def dummy_session():
 @pytest.fixture
 def dummy_vector_results():
     """Dummy vector results with recency scores for hybrid ranking."""
+
     class V:
         def __init__(
             self,

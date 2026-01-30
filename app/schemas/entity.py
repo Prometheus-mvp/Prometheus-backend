@@ -41,4 +41,3 @@ class EntityResponse(EntityBase):
 
     class Config:
         from_attributes = True
-

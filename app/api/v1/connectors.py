@@ -33,9 +33,10 @@ logger = logging.getLogger(__name__)
 @router.get("/slack/oauth/initiate", response_model=OAuthInitiateResponse)
 async def slack_oauth_initiate(user_id: UserID) -> OAuthInitiateResponse:
     """Initiate Slack OAuth."""
+
     async def _operation():
         return await slack_connector.build_auth_url(user_id)
-    
+
     auth_url, state = await handle_operation(
         db=None,
         operation=_operation,
@@ -56,11 +57,12 @@ async def slack_oauth_callback(
     state: str = Query(..., description="OAuth state parameter for CSRF protection"),
 ) -> OAuthCallbackResponse:
     """Handle Slack OAuth callback."""
+
     async def _operation():
         return await slack_connector.handle_callback(
             session=db, user_id=user_id, code=code, state=state
         )
-    
+
     account = await handle_operation(
         db=db,
         operation=_operation,
@@ -70,7 +72,7 @@ async def slack_oauth_callback(
         operation_name="slack_oauth_callback",
         commit_on_success=True,
     )
-    
+
     return OAuthCallbackResponse(
         linked_account_id=account.id,
         provider=account.provider,
@@ -89,11 +91,12 @@ async def telegram_auth_initiate(
     user_id: UserID,
 ) -> TelegramAuthInitiateResponse:
     """Initiate Telegram phone authentication."""
+
     async def _operation():
         return await telegram_connector.initiate_phone_auth(
             session=db, user_id=user_id, phone_number=payload.phone_number
         )
-    
+
     auth_session_id, phone_code_hash = await handle_operation(
         db=db,
         operation=_operation,
@@ -103,7 +106,7 @@ async def telegram_auth_initiate(
         operation_name="telegram_auth_initiate",
         commit_on_success=False,
     )
-    
+
     return TelegramAuthInitiateResponse(
         auth_session_id=auth_session_id,
         phone_code_hash=phone_code_hash,
@@ -120,6 +123,7 @@ async def telegram_auth_verify(
     user_id: UserID,
 ) -> TelegramAuthVerifyResponse:
     """Verify Telegram phone code."""
+
     async def _operation():
         account = await telegram_connector.verify_phone_code(
             session=db,
@@ -135,7 +139,7 @@ async def telegram_auth_verify(
                 detail="Telegram verification failed",
             )
         return account
-    
+
     account = await handle_operation(
         db=db,
         operation=_operation,
@@ -145,7 +149,7 @@ async def telegram_auth_verify(
         operation_name="telegram_auth_verify",
         commit_on_success=True,
     )
-    
+
     return TelegramAuthVerifyResponse(
         linked_account_id=account.id,
         provider=account.provider,
@@ -157,9 +161,10 @@ async def telegram_auth_verify(
 @router.get("/outlook/oauth/initiate", response_model=OAuthInitiateResponse)
 async def outlook_oauth_initiate(user_id: UserID) -> OAuthInitiateResponse:
     """Initiate Outlook OAuth."""
+
     async def _operation():
         return await outlook_connector.build_auth_url(user_id)
-    
+
     auth_url, state = await handle_operation(
         db=None,
         operation=_operation,
@@ -180,11 +185,12 @@ async def outlook_oauth_callback(
     state: str = Query(..., description="OAuth state parameter for CSRF protection"),
 ) -> OAuthCallbackResponse:
     """Handle Outlook OAuth callback."""
+
     async def _operation():
         return await outlook_connector.handle_callback(
             session=db, user_id=user_id, code=code, state=state
         )
-    
+
     account = await handle_operation(
         db=db,
         operation=_operation,
@@ -194,7 +200,7 @@ async def outlook_oauth_callback(
         operation_name="outlook_oauth_callback",
         commit_on_success=True,
     )
-    
+
     return OAuthCallbackResponse(
         linked_account_id=account.id,
         provider=account.provider,
@@ -213,7 +219,9 @@ async def list_linked_accounts(
     account_status: AccountStatus | None = Query(
         default=None, description="Filter by status (active, revoked, error)"
     ),
-    limit: int = Query(default=50, ge=1, le=100, description="Maximum number of accounts to return"),
+    limit: int = Query(
+        default=50, ge=1, le=100, description="Maximum number of accounts to return"
+    ),
     offset: int = Query(default=0, ge=0, description="Number of accounts to skip"),
 ) -> list[LinkedAccountResponse]:
     """List linked accounts for the current user."""
@@ -231,7 +239,9 @@ async def list_linked_accounts(
 
     result = await db.execute(stmt)
     accounts = list(result.scalars().all())
-    logger.debug("Listed linked accounts", extra={"user_id": user_id, "count": len(accounts)})
+    logger.debug(
+        "Listed linked accounts", extra={"user_id": user_id, "count": len(accounts)}
+    )
     return accounts
 
 
@@ -250,13 +260,13 @@ async def delete_linked_account(
     )
     result = await db.execute(stmt)
     row = result.fetchone()
-    
+
     if not row:
         await db.rollback()
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Linked account not found"
         )
-    
+
     await db.commit()
     logger.info(
         "Deleted linked account",

@@ -42,4 +42,3 @@ class ProposalResponse(ProposalBase):
 
     class Config:
         from_attributes = True
-

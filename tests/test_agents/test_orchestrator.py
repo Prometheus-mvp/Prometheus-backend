@@ -29,6 +29,7 @@ class TestAgentOrchestrator:
     @pytest.mark.asyncio
     async def test_execute_agent_persists_result(self, orchestrator, mock_session):
         """Test that execute_agent persists execution result."""
+
         async def mock_agent_method():
             return {"result": "test"}
 
@@ -179,4 +180,3 @@ class TestInterAgentCommunication:
         )
 
         assert summary_result == {"overview": "Previous summary"}
-

@@ -39,5 +39,3 @@ class NoteResponse(NoteBase):
 
     class Config:
         from_attributes = True
-
-

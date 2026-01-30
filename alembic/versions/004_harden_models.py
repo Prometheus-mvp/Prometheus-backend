@@ -62,4 +62,3 @@ def downgrade() -> None:
     op.drop_constraint("ck_embeddings_dim_matches_vector", "embeddings", type_="check")
     op.drop_constraint("ck_embeddings_object_type", "embeddings", type_="check")
     op.drop_constraint("ck_events_time_range", "events", type_="check")
-

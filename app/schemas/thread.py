@@ -44,5 +44,3 @@ class ThreadResponse(ThreadBase):
 
     class Config:
         from_attributes = True
-
-

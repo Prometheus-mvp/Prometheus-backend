@@ -65,7 +65,7 @@ class AgentBase:
     ) -> Optional[Dict[str, Any]]:
         """
         Retrieve result from another agent for use as context.
-        
+
         Example: QueryAgent can get SummarizeAgent result to answer questions.
         SummarizeAgent can get QueryAgent result for fine-grained context.
         """

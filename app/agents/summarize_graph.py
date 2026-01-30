@@ -23,7 +23,7 @@ if TYPE_CHECKING:
 class SummarizeAgent(AgentBase):
     """
     Pull-based agent: Only executes when user explicitly requests summary.
-    
+
     Can call QueryAgent to get context outside prompt scope for
     more comprehensive summaries.
     """
@@ -52,7 +52,7 @@ class SummarizeAgent(AgentBase):
     ) -> Dict[str, Any]:
         """
         Summarize events in the specified time range - only called on user request (pull-based).
-        
+
         Uses stored recency scores in hybrid ranking.
         Can use QueryAgent's context bank for additional context.
         """
@@ -97,7 +97,9 @@ class SummarizeAgent(AgentBase):
         for vr in vector_results:
             score_info = f"Score: {vr.final_score:.3f}" if vr.final_score else ""
             if vr.semantic_score is not None and vr.recency_score is not None:
-                score_info += f" (sem: {vr.semantic_score:.3f}, rec: {vr.recency_score:.3f})"
+                score_info += (
+                    f" (sem: {vr.semantic_score:.3f}, rec: {vr.recency_score:.3f})"
+                )
             context_lines.append(
                 f"- [{vr.object_type}:{vr.object_id}] {score_info} Metadata: {vr.metadata}"
             )

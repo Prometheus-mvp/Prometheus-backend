@@ -18,9 +18,15 @@ depends_on = None
 
 def upgrade() -> None:
     # Standardize content_hash columns from Text to String(255)
-    op.alter_column("events", "content_hash", type_=sa.String(255), existing_type=sa.Text())
-    op.alter_column("notes", "content_hash", type_=sa.String(255), existing_type=sa.Text())
-    op.alter_column("threads", "content_hash", type_=sa.String(255), existing_type=sa.Text())
+    op.alter_column(
+        "events", "content_hash", type_=sa.String(255), existing_type=sa.Text()
+    )
+    op.alter_column(
+        "notes", "content_hash", type_=sa.String(255), existing_type=sa.Text()
+    )
+    op.alter_column(
+        "threads", "content_hash", type_=sa.String(255), existing_type=sa.Text()
+    )
 
     # Add CHECK constraints for Task model
     op.create_check_constraint(
@@ -106,7 +112,9 @@ def upgrade() -> None:
 
 def downgrade() -> None:
     # Drop CHECK constraints
-    op.drop_constraint("ck_calendar_events_valid_time_range", "calendar_events", type_="check")
+    op.drop_constraint(
+        "ck_calendar_events_valid_time_range", "calendar_events", type_="check"
+    )
     op.drop_constraint("ck_proposals_valid_window", "proposals", type_="check")
     op.drop_constraint("ck_summaries_valid_window", "summaries", type_="check")
     op.drop_constraint("ck_threads_source", "threads", type_="check")
@@ -121,7 +129,12 @@ def downgrade() -> None:
     op.drop_constraint("ck_tasks_status", "tasks", type_="check")
 
     # Revert content_hash columns back to Text
-    op.alter_column("threads", "content_hash", type_=sa.Text(), existing_type=sa.String(255))
-    op.alter_column("notes", "content_hash", type_=sa.Text(), existing_type=sa.String(255))
-    op.alter_column("events", "content_hash", type_=sa.Text(), existing_type=sa.String(255))
-
+    op.alter_column(
+        "threads", "content_hash", type_=sa.Text(), existing_type=sa.String(255)
+    )
+    op.alter_column(
+        "notes", "content_hash", type_=sa.Text(), existing_type=sa.String(255)
+    )
+    op.alter_column(
+        "events", "content_hash", type_=sa.Text(), existing_type=sa.String(255)
+    )

@@ -68,7 +68,9 @@ async def get_event(
         )
         event = result.scalar_one_or_none()
         if not event:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Event not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Event not found"
+            )
         return event
 
     return await handle_operation(
@@ -98,7 +100,9 @@ async def delete_event(
         )
         result = await db.execute(stmt)
         if result.rowcount == 0:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Event not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Event not found"
+            )
         return None
 
     return await handle_operation(
@@ -110,4 +114,3 @@ async def delete_event(
         operation_name="events_delete",
         commit_on_success=True,
     )
-

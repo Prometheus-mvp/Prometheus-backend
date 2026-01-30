@@ -35,4 +35,3 @@ def upgrade() -> None:
 def downgrade() -> None:
     op.drop_index("idx_embeddings_recency_score", table_name="embeddings")
     op.drop_column("embeddings", "recency_score")
-

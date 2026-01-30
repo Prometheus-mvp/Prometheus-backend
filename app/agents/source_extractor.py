@@ -25,7 +25,7 @@ class SourceExtractor(AgentBase):
     async def extract_sources(self, prompt: str) -> Dict[str, Any]:
         """
         Extract sources (slack, telegram, outlook) from prompt.
-        
+
         Returns:
             {
                 "sources": ["slack", "telegram"],  # List of identified sources
@@ -94,4 +94,3 @@ If no sources are mentioned or implied, return an empty sources list.
 source_extractor = SourceExtractor()
 
 __all__ = ["SourceExtractor", "source_extractor", "VALID_SOURCES"]
-

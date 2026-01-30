@@ -109,4 +109,3 @@ async def handle_operation(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=error_message,
         ) from exc
-

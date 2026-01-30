@@ -82,9 +82,10 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    op.drop_index("idx_agent_executions_user_agent_created", table_name="agent_executions")
+    op.drop_index(
+        "idx_agent_executions_user_agent_created", table_name="agent_executions"
+    )
     op.drop_index("idx_agent_executions_user_session", table_name="agent_executions")
     op.drop_index("idx_agent_executions_session_id", table_name="agent_executions")
     op.drop_index("idx_agent_executions_user_id", table_name="agent_executions")
     op.drop_table("agent_executions")
-

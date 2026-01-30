@@ -23,6 +23,7 @@ async def list_notes(
     user_id: UserID,
 ) -> List[NoteResponse]:
     """List notes for the current user."""
+
     async def _operation():
         result = await db.execute(
             select(Note)
@@ -49,6 +50,7 @@ async def create_note(
     user_id: UserID,
 ) -> NoteResponse:
     """Create a new note."""
+
     async def _operation():
         note = Note(user_id=user_id, **payload.model_dump())
         db.add(note)
@@ -74,13 +76,16 @@ async def get_note(
     user_id: UserID,
 ) -> NoteResponse:
     """Get a specific note."""
+
     async def _operation():
         result = await db.execute(
             select(Note).where(Note.id == note_id, Note.user_id == user_id)
         )
         note = result.scalar_one_or_none()
         if not note:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Note not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Note not found"
+            )
         return note
 
     return await handle_operation(
@@ -102,6 +107,7 @@ async def update_note(
     user_id: UserID,
 ) -> NoteResponse:
     """Update a note."""
+
     async def _operation():
         stmt = (
             update(Note)
@@ -112,7 +118,9 @@ async def update_note(
         result = await db.execute(stmt)
         row = result.fetchone()
         if not row:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Note not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Note not found"
+            )
         return row[0]
 
     return await handle_operation(
@@ -133,6 +141,7 @@ async def delete_note(
     user_id: UserID,
 ) -> None:
     """Soft delete a note."""
+
     async def _operation():
         stmt = (
             update(Note)
@@ -143,7 +152,9 @@ async def delete_note(
         result = await db.execute(stmt)
         row = result.fetchone()
         if not row:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Note not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Note not found"
+            )
         return None
 
     return await handle_operation(
@@ -155,5 +166,3 @@ async def delete_note(
         operation_name="notes_delete",
         commit_on_success=True,
     )
-
-

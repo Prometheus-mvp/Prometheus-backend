@@ -54,4 +54,3 @@ class AgentExecution(Base):
 
     # Relationships
     user = relationship("User", back_populates="agent_executions")
-

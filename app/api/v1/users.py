@@ -21,11 +21,14 @@ async def get_current_user_profile(
     user_id: UserID,
 ) -> UserResponse:
     """Get current user profile."""
+
     async def _operation():
         result = await db.execute(select(User).where(User.id == user_id))
         user = result.scalar_one_or_none()
         if not user:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+            )
         return user
 
     return await handle_operation(
@@ -46,6 +49,7 @@ async def update_current_user_profile(
     user_id: UserID,
 ) -> UserResponse:
     """Update current user profile."""
+
     async def _operation():
         stmt = (
             update(User)
@@ -56,7 +60,9 @@ async def update_current_user_profile(
         result = await db.execute(stmt)
         row = result.fetchone()
         if not row:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+            )
         return row[0]
 
     return await handle_operation(
@@ -68,5 +74,3 @@ async def update_current_user_profile(
         operation_name="users_update_me",
         commit_on_success=True,
     )
-
-

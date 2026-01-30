@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 class QueryAgent(AgentBase):
     """
     Push-based agent that acts as context bank for all other agents.
-    
+
     Runs on schedule/events to proactively build context by:
     - Fetching events via connector APIs
     - Generating embeddings with recency scores
@@ -57,7 +57,7 @@ class QueryAgent(AgentBase):
         """
         Push-based method: Proactively build context bank by fetching events,
         generating embeddings with recency scores, and storing context.
-        
+
         Called by background job at intervals or on events.
         """
         from app.jobs.ingestion import ingest_events_for_user
@@ -93,7 +93,7 @@ class QueryAgent(AgentBase):
     ) -> Dict[str, Any]:
         """
         Fine-grained search using semantic similarity + stored recency scores.
-        
+
         Used by other agents to retrieve specific context from the context bank.
         Returns results ranked by combined semantic + recency score.
         """
@@ -138,7 +138,7 @@ class QueryAgent(AgentBase):
     ) -> Dict[str, Any]:
         """
         Answer user query using context bank.
-        
+
         Can call SummarizeAgent to broaden context if:
         - Search results have low recency scores (old context)
         - Additional summarization needed for specific time frames
@@ -172,7 +172,9 @@ class QueryAgent(AgentBase):
         for r in results[:10]:
             score_info = f"Score: {r['final_score']:.3f}"
             if r["semantic_score"] is not None and r["recency_score"] is not None:
-                score_info += f" (sem: {r['semantic_score']:.3f}, rec: {r['recency_score']:.3f})"
+                score_info += (
+                    f" (sem: {r['semantic_score']:.3f}, rec: {r['recency_score']:.3f})"
+                )
             context_lines.append(f"- [{r['object_id']}] {score_info}")
 
         context = "\n".join(context_lines)
@@ -215,4 +217,3 @@ class QueryAgent(AgentBase):
 query_agent = QueryAgent()
 
 __all__ = ["QueryAgent", "query_agent"]
-

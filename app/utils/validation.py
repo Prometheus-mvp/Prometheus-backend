@@ -9,7 +9,7 @@ from app.agents.source_extractor import VALID_SOURCES
 def validate_sources(sources: Optional[List[str]]) -> Tuple[bool, List[str], str]:
     """
     Validate source list.
-    
+
     Returns:
         (is_valid, valid_sources, error_message)
     """
@@ -26,7 +26,11 @@ def validate_sources(sources: Optional[List[str]]) -> Tuple[bool, List[str], str
             invalid.append(source)
 
     if invalid:
-        return False, valid, f"Invalid sources: {', '.join(invalid)}. Valid sources: {', '.join(VALID_SOURCES)}"
+        return (
+            False,
+            valid,
+            f"Invalid sources: {', '.join(invalid)}. Valid sources: {', '.join(VALID_SOURCES)}",
+        )
 
     return True, valid, ""
 
@@ -37,7 +41,7 @@ def validate_time_range(
 ) -> Tuple[bool, str]:
     """
     Validate time range.
-    
+
     Returns:
         (is_valid, error_message)
     """
@@ -68,7 +72,7 @@ def needs_clarification(
 ) -> Tuple[bool, List[str], str]:
     """
     Check if prompt needs clarification from user.
-    
+
     Returns:
         (needs_clarification, missing_fields, clarification_message)
     """
@@ -78,12 +82,16 @@ def needs_clarification(
     # Check sources
     if not sources:
         missing.append("sources")
-        messages.append("Which application(s) should I check? (slack, telegram, outlook)")
+        messages.append(
+            "Which application(s) should I check? (slack, telegram, outlook)"
+        )
 
     # Check time range
     if not start_time or not end_time:
         missing.append("time_range")
-        messages.append("What time period should I look at? (e.g., 'last 2 hours', 'today', 'yesterday')")
+        messages.append(
+            "What time period should I look at? (e.g., 'last 2 hours', 'today', 'yesterday')"
+        )
 
     if missing:
         return True, missing, " ".join(messages)
@@ -97,4 +105,3 @@ __all__ = [
     "needs_clarification",
     "VALID_SOURCES",
 ]
-

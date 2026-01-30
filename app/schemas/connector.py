@@ -27,11 +27,19 @@ class AccountStatus(str, Enum):
 class LinkedAccountBase(BaseModel):
     """Base linked account schema."""
 
-    provider: Provider = Field(..., description="OAuth provider: slack, telegram, or outlook")
-    provider_account_id: str = Field(..., description="External provider's account identifier")
+    provider: Provider = Field(
+        ..., description="OAuth provider: slack, telegram, or outlook"
+    )
+    provider_account_id: str = Field(
+        ..., description="External provider's account identifier"
+    )
     scopes: Optional[str] = Field(None, description="OAuth scopes granted")
-    status: AccountStatus = Field(default=AccountStatus.ACTIVE, description="Account connection status")
-    metadata: Dict[str, Any] = Field(default_factory=dict, description="Additional provider-specific metadata")
+    status: AccountStatus = Field(
+        default=AccountStatus.ACTIVE, description="Account connection status"
+    )
+    metadata: Dict[str, Any] = Field(
+        default_factory=dict, description="Additional provider-specific metadata"
+    )
 
 
 class LinkedAccountResponse(LinkedAccountBase):
@@ -49,23 +57,31 @@ class LinkedAccountResponse(LinkedAccountBase):
 class OAuthInitiateResponse(BaseModel):
     """OAuth initiation response."""
 
-    auth_url: str = Field(..., description="URL to redirect user for OAuth authorization")
+    auth_url: str = Field(
+        ..., description="URL to redirect user for OAuth authorization"
+    )
     state: str = Field(..., description="CSRF protection state token")
 
 
 class OAuthCallbackResponse(BaseModel):
     """OAuth callback response."""
 
-    linked_account_id: UUID = Field(..., description="Created linked account identifier")
+    linked_account_id: UUID = Field(
+        ..., description="Created linked account identifier"
+    )
     provider: Provider = Field(..., description="OAuth provider name")
-    provider_account_id: str = Field(..., description="External provider's account identifier")
+    provider_account_id: str = Field(
+        ..., description="External provider's account identifier"
+    )
     status: AccountStatus = Field(..., description="Account connection status")
 
 
 class TelegramAuthInitiateRequest(BaseModel):
     """Telegram auth initiation request."""
 
-    phone_number: str = Field(..., description="Phone number in international format (e.g., +1234567890)")
+    phone_number: str = Field(
+        ..., description="Phone number in international format (e.g., +1234567890)"
+    )
 
     @field_validator("phone_number")
     @classmethod
@@ -81,23 +97,31 @@ class TelegramAuthInitiateRequest(BaseModel):
 class TelegramAuthInitiateResponse(BaseModel):
     """Telegram auth initiation response."""
 
-    auth_session_id: UUID = Field(..., description="Telegram authentication session identifier")
+    auth_session_id: UUID = Field(
+        ..., description="Telegram authentication session identifier"
+    )
     phone_code_hash: str = Field(..., description="Hash for phone code verification")
 
 
 class TelegramAuthVerifyRequest(BaseModel):
     """Telegram auth verification request."""
 
-    auth_session_id: UUID = Field(..., description="Telegram authentication session identifier")
+    auth_session_id: UUID = Field(
+        ..., description="Telegram authentication session identifier"
+    )
     phone_code: str = Field(..., description="SMS verification code")
     phone_code_hash: str = Field(..., description="Hash for phone code verification")
-    phone_number: Optional[str] = Field(None, description="Phone number (optional, for verification)")
+    phone_number: Optional[str] = Field(
+        None, description="Phone number (optional, for verification)"
+    )
 
 
 class TelegramAuthVerifyResponse(BaseModel):
     """Telegram auth verification response."""
 
-    linked_account_id: UUID = Field(..., description="Created linked account identifier")
+    linked_account_id: UUID = Field(
+        ..., description="Created linked account identifier"
+    )
     provider: Literal["telegram"] = Field(..., description="Provider name")
     provider_account_id: str = Field(..., description="Telegram user identifier")
     status: AccountStatus = Field(..., description="Account connection status")

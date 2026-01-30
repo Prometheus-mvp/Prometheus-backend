@@ -98,7 +98,9 @@ async def ingest_events_for_user(session: AsyncSession, user_id: str) -> int:
                                 object_type="event",
                                 object_id=str(event_id),
                                 text=embedding_text,
-                                metadata={"source": evt.get("source", connector.provider)},
+                                metadata={
+                                    "source": evt.get("source", connector.provider)
+                                },
                                 occurred_at=occurred_at,
                             ),
                             occurred_at,

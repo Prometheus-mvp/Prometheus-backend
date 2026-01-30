@@ -23,6 +23,7 @@ async def list_summaries(
     offset: int = Query(default=0, ge=0),
 ) -> List[SummaryResponse]:
     """List summaries for the current user."""
+
     async def _operation():
         stmt = (
             select(Summary)
@@ -52,13 +53,16 @@ async def get_summary(
     user_id: UserID,
 ) -> SummaryResponse:
     """Get a specific summary."""
+
     async def _operation():
         result = await db.execute(
             select(Summary).where(Summary.id == summary_id, Summary.user_id == user_id)
         )
         summary = result.scalar_one_or_none()
         if not summary:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Summary not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Summary not found"
+            )
         return summary
 
     return await handle_operation(
@@ -70,5 +74,3 @@ async def get_summary(
         operation_name="summaries_get",
         commit_on_success=False,
     )
-
-

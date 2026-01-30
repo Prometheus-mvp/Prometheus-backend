@@ -36,4 +36,3 @@ def downgrade() -> None:
         "events",
         sa.Column("body", sa.Text(), nullable=True),
     )
-

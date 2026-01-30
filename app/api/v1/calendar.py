@@ -31,10 +31,13 @@ async def list_calendar_events(
     end_date: datetime | None = Query(
         default=None, description="Filter events ending before this date"
     ),
-    limit: int = Query(default=50, ge=1, le=500, description="Maximum number of events to return"),
+    limit: int = Query(
+        default=50, ge=1, le=500, description="Maximum number of events to return"
+    ),
     offset: int = Query(default=0, ge=0, description="Number of events to skip"),
 ) -> CalendarEventListResponse:
     """List calendar events for the current user with optional filters."""
+
     async def _operation():
         stmt = (
             select(CalendarEvent)
@@ -80,6 +83,7 @@ async def get_calendar_event(
     user_id: UserID,
 ) -> CalendarEventResponse:
     """Get a specific calendar event."""
+
     async def _operation():
         result = await db.execute(
             select(CalendarEvent).where(
@@ -111,6 +115,7 @@ async def create_calendar_event(
     user_id: UserID,
 ) -> CalendarEventResponse:
     """Create a new calendar event."""
+
     async def _operation():
         evt = CalendarEvent(user_id=user_id, **payload.model_dump())
         db.add(evt)
@@ -137,6 +142,7 @@ async def update_calendar_event(
     user_id: UserID,
 ) -> CalendarEventResponse:
     """Update a calendar event."""
+
     async def _operation():
         if payload.start_at is not None or payload.end_at is not None:
             existing = await db.execute(
@@ -151,8 +157,14 @@ async def update_calendar_event(
                     detail="Calendar event not found",
                 )
 
-            start_at = payload.start_at if payload.start_at is not None else existing_event.start_at
-            end_at = payload.end_at if payload.end_at is not None else existing_event.end_at
+            start_at = (
+                payload.start_at
+                if payload.start_at is not None
+                else existing_event.start_at
+            )
+            end_at = (
+                payload.end_at if payload.end_at is not None else existing_event.end_at
+            )
 
             if end_at <= start_at:
                 raise ValueError("end_at must be after start_at")
@@ -189,6 +201,7 @@ async def delete_calendar_event(
     user_id: UserID,
 ) -> None:
     """Delete a calendar event."""
+
     async def _operation():
         stmt = (
             delete(CalendarEvent)

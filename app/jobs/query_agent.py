@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 async def run_query_agent_context_bank(user_id: str) -> Dict[str, Any]:
     """
     Background job to run push-based QueryAgent.
-    
+
     Called at intervals (e.g., every hour) or on events (new events ingested).
     Builds the context bank by fetching events and generating embeddings.
     """
@@ -43,7 +43,7 @@ async def run_query_agent_context_bank(user_id: str) -> Dict[str, Any]:
 async def run_query_agent_for_all_users() -> Dict[str, Any]:
     """
     Background job to run QueryAgent for all active users.
-    
+
     Scheduled to run periodically (e.g., every hour) to keep
     all users' context banks up to date.
     """
@@ -85,4 +85,3 @@ async def run_query_agent_for_all_users() -> Dict[str, Any]:
 
 
 __all__ = ["run_query_agent_context_bank", "run_query_agent_for_all_users"]
-

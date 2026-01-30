@@ -90,7 +90,9 @@ async def get_entity(
         )
         entity = result.scalar_one_or_none()
         if not entity:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Entity not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Entity not found"
+            )
         return entity
 
     return await handle_operation(
@@ -123,7 +125,9 @@ async def update_entity(
         result = await db.execute(stmt)
         row = result.fetchone()
         if not row:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Entity not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Entity not found"
+            )
         return row[0]
 
     return await handle_operation(
@@ -154,7 +158,9 @@ async def delete_entity(
         result = await db.execute(stmt)
         row = result.fetchone()
         if not row:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Entity not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Entity not found"
+            )
         return None
 
     return await handle_operation(
@@ -166,5 +172,3 @@ async def delete_entity(
         operation_name="entities_delete",
         commit_on_success=True,
     )
-
-

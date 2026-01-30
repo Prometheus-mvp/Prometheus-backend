@@ -22,7 +22,9 @@ class Task(Base):
         nullable=False,
         index=True,
     )
-    status = Column(Text, nullable=False, server_default="open")  # open | done | snoozed
+    status = Column(
+        Text, nullable=False, server_default="open"
+    )  # open | done | snoozed
     priority = Column(
         Text, nullable=False, server_default="medium"
     )  # low | medium | high

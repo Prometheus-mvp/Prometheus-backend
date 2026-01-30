@@ -24,6 +24,7 @@ async def list_proposals(
     offset: int = Query(default=0, ge=0),
 ) -> List[ProposalResponse]:
     """List proposals for the current user."""
+
     async def _operation():
         stmt = (
             select(Proposal)
@@ -53,13 +54,18 @@ async def get_proposal(
     user_id: UserID,
 ) -> ProposalResponse:
     """Get a specific proposal."""
+
     async def _operation():
         result = await db.execute(
-            select(Proposal).where(Proposal.id == proposal_id, Proposal.user_id == user_id)
+            select(Proposal).where(
+                Proposal.id == proposal_id, Proposal.user_id == user_id
+            )
         )
         proposal = result.scalar_one_or_none()
         if not proposal:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Proposal not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Proposal not found"
+            )
         return proposal
 
     return await handle_operation(
@@ -71,5 +77,3 @@ async def get_proposal(
         operation_name="proposals_get",
         commit_on_success=False,
     )
-
-

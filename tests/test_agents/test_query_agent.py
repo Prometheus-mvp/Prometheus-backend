@@ -153,18 +153,14 @@ class TestQueryAgentBackgroundJob:
     @pytest.mark.asyncio
     async def test_background_job_calls_build_context_bank(self):
         """Test that background job calls build_context_bank."""
-        with patch(
-            "app.jobs.query_agent.AsyncSessionLocal"
-        ) as mock_session_local:
+        with patch("app.jobs.query_agent.AsyncSessionLocal") as mock_session_local:
             mock_session = MagicMock()
             mock_session.__aenter__ = AsyncMock(return_value=mock_session)
             mock_session.__aexit__ = AsyncMock(return_value=None)
             mock_session.commit = AsyncMock()
             mock_session_local.return_value = mock_session
 
-            with patch(
-                "app.jobs.query_agent.QueryAgent"
-            ) as mock_query_agent_class:
+            with patch("app.jobs.query_agent.QueryAgent") as mock_query_agent_class:
                 mock_agent = MagicMock()
                 mock_agent.build_context_bank = AsyncMock(
                     return_value={"events_processed": 10}
@@ -177,4 +173,3 @@ class TestQueryAgentBackgroundJob:
 
                 mock_agent.build_context_bank.assert_called_once()
                 assert result["events_processed"] == 10
-

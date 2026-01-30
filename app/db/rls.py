@@ -26,7 +26,9 @@ async def set_user_context(session: AsyncSession, user_id: str) -> None:
     )
 
 
-async def verify_rls_enabled(session: AsyncSession, table_name: str, schema: str = "public") -> bool:
+async def verify_rls_enabled(
+    session: AsyncSession, table_name: str, schema: str = "public"
+) -> bool:
     """
     Verify that RLS is enabled and at least one policy exists for the table.
     """

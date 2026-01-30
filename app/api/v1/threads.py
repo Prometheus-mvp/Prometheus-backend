@@ -23,6 +23,7 @@ async def list_threads(
     offset: int = Query(default=0, ge=0),
 ) -> List[ThreadResponse]:
     """List threads for the current user."""
+
     async def _operation():
         stmt = (
             select(Thread)
@@ -54,13 +55,16 @@ async def get_thread(
     user_id: UserID,
 ) -> ThreadResponse:
     """Get a specific thread."""
+
     async def _operation():
         result = await db.execute(
             select(Thread).where(Thread.id == thread_id, Thread.user_id == user_id)
         )
         thread = result.scalar_one_or_none()
         if not thread:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Thread not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Thread not found"
+            )
         return thread
 
     return await handle_operation(
@@ -72,5 +76,3 @@ async def get_thread(
         operation_name="threads_get",
         commit_on_success=False,
     )
-
-

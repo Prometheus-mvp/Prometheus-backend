@@ -32,12 +32,12 @@ async def handle_prompt(
 ) -> PromptResponse:
     """
     Main prompt entrypoint with orchestration.
-    
+
     Handles three intent types:
     - summarize: Pull-based SummarizeAgent (only on explicit request)
     - task: TaskAgent (neither push nor pull - performs tasks)
     - query: QueryAgent uses context bank for fine-grained search
-    
+
     Validates source applications and time ranges.
     Prompts user for clarification if missing.
     """

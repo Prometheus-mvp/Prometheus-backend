@@ -92,17 +92,20 @@ async def test_task_agent(monkeypatch, dummy_session, dummy_vector_results):
 
 
 @pytest.mark.asyncio
-async def test_summarize_agent_is_pull_based(monkeypatch, dummy_session, dummy_vector_results):
+async def test_summarize_agent_is_pull_based(
+    monkeypatch, dummy_session, dummy_vector_results
+):
     """Test that SummarizeAgent is pull-based (only executes on explicit request)."""
     # SummarizeAgent should only run when explicitly called
     # It should not run in background like QueryAgent
     agent = SummarizeAgent()
-    
+
     # Agent should have orchestrator support
-    assert hasattr(agent, 'orchestrator')
-    
+    assert hasattr(agent, "orchestrator")
+
     # Agent should accept orchestrator in constructor
     from unittest.mock import MagicMock
+
     mock_orchestrator = MagicMock()
     agent_with_orch = SummarizeAgent(orchestrator=mock_orchestrator)
     assert agent_with_orch.orchestrator == mock_orchestrator

@@ -24,7 +24,7 @@ class PromptRouterAgent(AgentBase):
     ) -> Literal["summarize", "task", "query"]:
         """
         Classify the user request intent.
-        
+
         Intent types:
         - summarize: User wants a summary of events/messages
         - task: User wants to see actionable items or tasks

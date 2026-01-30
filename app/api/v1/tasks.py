@@ -65,7 +65,9 @@ async def get_task(
         )
         task = result.scalar_one_or_none()
         if not task:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Task not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Task not found"
+            )
         return task
 
     return await handle_operation(
@@ -124,7 +126,9 @@ async def update_task(
         result = await db.execute(stmt)
         row = result.fetchone()
         if not row:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Task not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Task not found"
+            )
         return row[0]
 
     return await handle_operation(
@@ -155,7 +159,9 @@ async def delete_task(
         result = await db.execute(stmt)
         row = result.fetchone()
         if not row:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Task not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Task not found"
+            )
         return None
 
     return await handle_operation(

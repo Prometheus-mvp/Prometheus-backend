@@ -25,6 +25,7 @@ async def list_drafts(
     offset: int = Query(default=0, ge=0),
 ) -> List[DraftResponse]:
     """List drafts for the current user."""
+
     async def _operation():
         stmt = (
             select(Draft)
@@ -56,6 +57,7 @@ async def create_draft(
     user_id: UserID,
 ) -> DraftResponse:
     """Create a new draft."""
+
     async def _operation():
         draft = Draft(user_id=user_id, **payload.model_dump())
         db.add(draft)
@@ -81,13 +83,16 @@ async def get_draft(
     user_id: UserID,
 ) -> DraftResponse:
     """Get a specific draft."""
+
     async def _operation():
         result = await db.execute(
             select(Draft).where(Draft.id == draft_id, Draft.user_id == user_id)
         )
         draft = result.scalar_one_or_none()
         if not draft:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Draft not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Draft not found"
+            )
         return draft
 
     return await handle_operation(
@@ -109,6 +114,7 @@ async def update_draft(
     user_id: UserID,
 ) -> DraftResponse:
     """Update a draft."""
+
     async def _operation():
         stmt = (
             update(Draft)
@@ -119,7 +125,9 @@ async def update_draft(
         result = await db.execute(stmt)
         row = result.fetchone()
         if not row:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Draft not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Draft not found"
+            )
         return row[0]
 
     return await handle_operation(
@@ -140,6 +148,7 @@ async def delete_draft(
     user_id: UserID,
 ) -> None:
     """Delete a draft."""
+
     async def _operation():
         stmt = (
             delete(Draft)
@@ -149,7 +158,9 @@ async def delete_draft(
         result = await db.execute(stmt)
         row = result.fetchone()
         if not row:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Draft not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Draft not found"
+            )
         return None
 
     return await handle_operation(
@@ -161,5 +172,3 @@ async def delete_draft(
         operation_name="drafts_delete",
         commit_on_success=True,
     )
-
-

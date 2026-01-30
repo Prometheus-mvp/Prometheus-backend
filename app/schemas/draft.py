@@ -40,4 +40,3 @@ class DraftResponse(DraftBase):
 
     class Config:
         from_attributes = True
-

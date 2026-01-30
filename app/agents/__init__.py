@@ -35,4 +35,3 @@ __all__ = [
     "TimeRangeExtractor",
     "time_extractor",
 ]
-

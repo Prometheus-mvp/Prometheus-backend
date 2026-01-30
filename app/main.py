@@ -15,6 +15,7 @@ from app.core.logging import get_uvicorn_log_config, setup_logging
 # This ensures uvicorn has a valid log_config when run from command line
 try:
     import uvicorn.config
+
     # Override uvicorn's default log_config with our minimal config
     uvicorn.config.LOGGING_CONFIG = get_uvicorn_log_config()
 except (ImportError, AttributeError):
