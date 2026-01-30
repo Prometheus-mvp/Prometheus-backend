@@ -64,9 +64,10 @@ async def test_get_current_user():
     """Test get_current_user returns token data."""
     token_data = {"user_id": "user-123", "email": "test@example.com"}
 
-    with patch("app.core.security.verify_token", return_value=token_data):
-        result = await get_current_user()
-        assert result == token_data
+    # Pass token_data explicitly; when used as a dependency, FastAPI injects
+    # the result of verify_token, so we test that get_current_user returns it.
+    result = await get_current_user(token_data)
+    assert result == token_data
 
 
 def test_extract_user_id():

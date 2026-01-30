@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from sqlalchemy import and_, delete, func, select
+from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
@@ -62,7 +63,7 @@ class VectorStore:
             recency_score = math.exp(-age_days / tau_days)
 
         stmt = (
-            Embedding.__table__.insert()
+            pg_insert(Embedding.__table__)
             .values(
                 user_id=user_id,
                 object_type=object_type,

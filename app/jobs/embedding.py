@@ -25,6 +25,8 @@ async def embed_objects(
     Caller is responsible for selecting objects needing embedding and supplying
     content_hash (or it will be computed).
     """
+    if not objects:
+        return 0
     # Ensure content_hash present for idempotency
     for obj in objects:
         if not obj.content_hash:

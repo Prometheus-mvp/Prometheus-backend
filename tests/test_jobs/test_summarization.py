@@ -2,7 +2,6 @@
 
 import pytest
 from unittest.mock import AsyncMock, patch
-from datetime import datetime, timezone, timedelta
 from uuid import uuid4
 
 
@@ -12,20 +11,18 @@ async def test_run_summarization():
     from app.jobs.summarization import run_summarization
 
     user_id = str(uuid4())
-    window_start = datetime.now(timezone.utc) - timedelta(hours=2)
-    window_end = datetime.now(timezone.utc)
-
     mock_db = AsyncMock()
 
-    with patch("app.jobs.summarization.summarize_events") as mock_summarize:
-        mock_summarize.return_value = {
-            "summary": "Test summary",
-            "key_points": ["point1"],
-            "source_refs": [],
-        }
+    with patch("app.jobs.summarization.summarize_agent") as mock_agent:
+        mock_agent.summarize = AsyncMock(
+            return_value={"summary": "Test summary", "key_points": ["point1"]}
+        )
 
-        await run_summarization(mock_db, user_id, window_start, window_end)
+        result = await run_summarization(mock_db, user_id=user_id, hours=2)
 
-        mock_summarize.assert_called_once()
-        mock_db.add.assert_called_once()
-        mock_db.commit.assert_called_once()
+        mock_agent.summarize.assert_called_once_with(
+            mock_db, user_id=user_id, prompt="summarize", hours=2, sources=None
+        )
+
+    assert result["summary"] == "Test summary"
+    assert result["key_points"] == ["point1"]

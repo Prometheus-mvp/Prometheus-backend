@@ -34,9 +34,8 @@ async def test_embed_objects_success():
         EmbeddingObject(
             user_id=str(uuid4()),
             object_type="event",
-            object_id=uuid4(),
+            object_id=str(uuid4()),
             text="Test event",
-            chunk_index=0,
         )
     ]
 

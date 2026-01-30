@@ -17,7 +17,9 @@ async def test_list_calendar_events():
     mock_result.scalars.return_value.all.return_value = []
     mock_db.execute = AsyncMock(return_value=mock_result)
 
-    response = await list_calendar_events(db=mock_db, user_id=user_id)
+    response = await list_calendar_events(
+        db=mock_db, user_id=user_id, limit=50, offset=0
+    )
 
     assert response.total == 0
     assert response.events == []
@@ -31,6 +33,7 @@ async def test_create_calendar_event():
 
     user_id = str(uuid4())
     mock_db = AsyncMock()
+    mock_db.add = Mock()  # sync in real SQLAlchemy; avoid unawaited coroutine warning
 
     event_data = CalendarEventCreate(
         title="Team Meeting",
@@ -40,7 +43,7 @@ async def test_create_calendar_event():
     )
 
     response = await create_calendar_event(
-        event=event_data, db=mock_db, user_id=user_id
+        payload=event_data, db=mock_db, user_id=user_id
     )
 
     assert response.title == "Team Meeting"
@@ -58,7 +61,7 @@ async def test_delete_calendar_event_not_found():
     event_id = uuid4()
     mock_db = AsyncMock()
     mock_result = Mock()
-    mock_result.scalar_one_or_none.return_value = None
+    mock_result.fetchone.return_value = None
     mock_db.execute = AsyncMock(return_value=mock_result)
 
     with pytest.raises(HTTPException) as exc_info:

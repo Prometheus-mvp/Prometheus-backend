@@ -1,22 +1,22 @@
 """Tests for connector schemas."""
 
 from app.schemas.connector import (
-    LinkedAccountCreate,
+    LinkedAccountBase,
     OAuthInitiateResponse,
     TelegramAuthInitiateRequest,
 )
 
 
-def test_linked_account_create():
-    """Test LinkedAccountCreate schema."""
-    account = LinkedAccountCreate(
+def test_linked_account_base():
+    """Test LinkedAccountBase schema (used for creation payloads)."""
+    account = LinkedAccountBase(
         provider="slack",
         provider_account_id="U123",
         scopes="channels:read",
         status="active",
     )
 
-    assert account.provider == "slack"
+    assert account.provider.value == "slack"
     assert account.provider_account_id == "U123"
 
 

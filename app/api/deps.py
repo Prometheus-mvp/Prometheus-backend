@@ -16,10 +16,8 @@ async def get_db_session() -> AsyncSession:
         yield session
 
 
-# User authentication dependency
-async def get_current_user_dep():
-    """Get current authenticated user dependency."""
-    return await get_current_user()
+# User authentication dependency (use get_current_user so FastAPI injects verify_token result)
+get_current_user_dep = get_current_user
 
 
 # User ID extraction

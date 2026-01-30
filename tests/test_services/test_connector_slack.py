@@ -22,52 +22,72 @@ async def test_slack_build_auth_url():
 
 @pytest.mark.asyncio
 async def test_slack_exchange_code_success():
-    """Test Slack OAuth code exchange."""
+    """Test Slack OAuth callback (code exchange)."""
     from app.services.connector.slack import SlackConnector
 
     connector = SlackConnector()
     user_id = str(uuid4())
     mock_db = AsyncMock()
+    mock_db.add = Mock()  # sync in real SQLAlchemy; avoid unawaited coroutine warning
+    mock_account = Mock()
+    mock_account.id = uuid4()
 
-    mock_response = {
+    mock_response = Mock()
+    mock_response.json.return_value = {
         "ok": True,
         "access_token": "xoxb-test",
         "team": {"id": "T123"},
         "authed_user": {"id": "U123"},
     }
 
-    with patch.object(connector.client, "post") as mock_post:
-        mock_post.return_value = Mock(json=lambda: mock_response)
+    with patch.object(connector._client, "post", new_callable=AsyncMock) as mock_post:
+        mock_post.return_value = mock_response
+        with patch.object(
+            connector, "_get_or_create_linked_account", new_callable=AsyncMock
+        ) as mock_get_account:
+            mock_get_account.return_value = mock_account
 
-        result = await connector.exchange_code(mock_db, "code123", user_id)
+            result = await connector.handle_callback(
+                mock_db, user_id, code="code123", state="state123"
+            )
 
-        assert result is not None
-        mock_db.add.assert_called()
+            assert result is not None
+            mock_db.add.assert_called()
 
 
 @pytest.mark.asyncio
-async def test_slack_fetch_recent_events():
+async def test_slack_fetch_events():
     """Test Slack event fetching."""
     from app.services.connector.slack import SlackConnector
 
     connector = SlackConnector()
     mock_db = AsyncMock()
-    account_id = uuid4()
+    user_id = str(uuid4())
+    mock_account = Mock()
+    mock_account.id = uuid4()
 
-    with patch.object(connector, "_get_latest_token") as mock_token:
-        mock_token.return_value = Mock(access_token_enc="encrypted")
+    mock_account_result = Mock()
+    mock_account_result.scalars.return_value.first.return_value = mock_account
+    mock_db.execute = AsyncMock(return_value=mock_account_result)
 
-        with patch("app.services.connector.slack.encryption_service") as mock_enc:
-            mock_enc.decrypt.return_value = "xoxb-decrypted"
-
-            with patch.object(connector.client, "get") as mock_get:
-                mock_get.return_value = Mock(
+    with patch.object(
+        connector, "_ensure_access_token", new_callable=AsyncMock
+    ) as mock_ensure:
+        mock_ensure.return_value = "xoxb-token"
+        with patch.object(
+            connector._client, "get", new_callable=AsyncMock
+        ) as mock_get:
+            mock_get.side_effect = [
+                Mock(json=lambda: {"ok": True, "channels": [{"id": "C1"}]}),
+                Mock(
                     json=lambda: {
                         "ok": True,
                         "messages": [{"ts": "1234.5678", "text": "Hello"}],
                     }
-                )
+                ),
+            ]
 
-                events = await connector.fetch_recent_events(mock_db, account_id)
+            events = await connector.fetch_events(mock_db, user_id, since=None)
 
-                assert len(events) >= 0  # May return empty if filtering
+            assert isinstance(events, list)
+            assert len(events) >= 0

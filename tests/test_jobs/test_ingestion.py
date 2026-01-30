@@ -43,9 +43,11 @@ async def test_ingest_events_for_user_with_slack():
     mock_result.scalars.return_value.all.return_value = [mock_account]
     mock_db.execute = AsyncMock(return_value=mock_result)
 
-    with patch("app.jobs.ingestion.slack_connector") as mock_slack:
-        mock_slack.fetch_recent_events = AsyncMock(return_value=[])
+    mock_slack = Mock()
+    mock_slack.provider = "slack"
+    mock_slack.fetch_events = AsyncMock(return_value=[])
 
+    with patch("app.jobs.ingestion.slack_connector", mock_slack):
         await ingest_events_for_user(mock_db, str(user_id))
 
-        mock_slack.fetch_recent_events.assert_called_once()
+    mock_slack.fetch_events.assert_called_once()

@@ -18,7 +18,7 @@ async def test_slack_oauth_initiate():
             return_value=("https://slack.com/oauth/authorize?...", "state123")
         )
 
-        response = await slack_oauth_initiate(db=mock_db, user_id=user_id)
+        response = await slack_oauth_initiate(user_id=user_id)
 
         assert response.auth_url.startswith("https://slack.com/oauth/authorize")
         assert response.state == "state123"
@@ -35,7 +35,14 @@ async def test_list_linked_accounts():
     mock_result.scalars.return_value.all.return_value = []
     mock_db.execute = AsyncMock(return_value=mock_result)
 
-    response = await list_linked_accounts(db=mock_db, user_id=user_id)
+    response = await list_linked_accounts(
+        db=mock_db,
+        user_id=user_id,
+        provider=None,
+        account_status=None,
+        limit=50,
+        offset=0,
+    )
 
     assert response == []
 
@@ -50,10 +57,12 @@ async def test_delete_linked_account_not_found():
     account_id = uuid4()
     mock_db = AsyncMock()
     mock_result = Mock()
-    mock_result.scalar_one_or_none.return_value = None
+    mock_result.fetchone.return_value = None
     mock_db.execute = AsyncMock(return_value=mock_result)
 
     with pytest.raises(HTTPException) as exc_info:
-        await delete_linked_account(account_id=account_id, db=mock_db, user_id=user_id)
+        await delete_linked_account(
+            linked_account_id=account_id, db=mock_db, user_id=user_id
+        )
 
     assert exc_info.value.status_code == 404

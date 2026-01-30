@@ -17,7 +17,6 @@ def test_event_creation():
         external_id="msg_123",
         event_type="message",
         title="Test Message",
-        body="Hello world",
         occurred_at=now,
         expires_at=expires,
     )
@@ -27,7 +26,6 @@ def test_event_creation():
     assert event.external_id == "msg_123"
     assert event.event_type == "message"
     assert event.title == "Test Message"
-    assert event.body == "Hello world"
 
 
 def test_event_with_thread():

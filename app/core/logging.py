@@ -18,7 +18,7 @@ class JSONFormatter(logging.Formatter):
             "logger": record.name,
             "message": record.getMessage(),
             "module": record.module,
-            "function": record.funcName,
+            "function": record.funcName or "<module>",
             "line": record.lineno,
         }
 
