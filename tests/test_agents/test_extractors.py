@@ -87,7 +87,6 @@ class TestTimeRangeExtractor:
         extractor = TimeRangeExtractor()
         result = await extractor.extract_time_range("summarize last 2 hours")
 
-        now = datetime.now(timezone.utc)
         assert result["start_time"] is not None
         assert result["end_time"] is not None
         assert result["confidence"] >= 0.9

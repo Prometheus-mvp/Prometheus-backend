@@ -1,7 +1,6 @@
 """Proposal Pydantic schemas."""
 
 from datetime import datetime
-from datetime import datetime
 from typing import Any, Dict, List, Optional
 from uuid import UUID
 

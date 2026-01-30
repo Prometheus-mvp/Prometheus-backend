@@ -3,7 +3,6 @@
 import logging
 from datetime import datetime, timedelta, timezone
 from typing import List, Tuple
-from uuid import UUID
 
 from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert

@@ -1,7 +1,6 @@
 """User profile management endpoints."""
 
 import logging
-from uuid import UUID
 
 from fastapi import APIRouter, HTTPException, status
 from sqlalchemy import select, update

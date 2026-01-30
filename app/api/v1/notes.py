@@ -6,7 +6,7 @@ from typing import List
 from uuid import UUID
 
 from fastapi import APIRouter, HTTPException, status
-from sqlalchemy import delete, select, update
+from sqlalchemy import select, update
 
 from app.api.deps import DatabaseSession, UserID
 from app.api.v1.common_helpers import handle_operation
