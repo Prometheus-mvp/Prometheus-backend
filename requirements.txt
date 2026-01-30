@@ -43,6 +43,6 @@ pytest-xdist>=3.6.1  # Parallel test execution (3.6.0 was yanked)
 
 # Development
 black==25.9.0
-ruff==0.6.0
+ruff==0.13.1
 mypy==1.11.0
 
